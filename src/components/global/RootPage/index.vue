@@ -1,7 +1,5 @@
 <template>
   <div class="root-page" :class="{ 'auto-height': autoHeight }">
-    <slot name="header" v-if="$slots.header" />
-    <fs-nav-bar :title="route.meta.title" v-else />
     <slot />
   </div>
 </template>

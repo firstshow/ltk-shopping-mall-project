@@ -1,0 +1,25 @@
+.x-guidance-box {
+  padding: 16px 0;
+  background-color: @ltk-theme-color;
+  .x-item {
+    width: 25%;
+    color: @white;
+    font-size: 10px;
+    .x-tips {
+      margin-top: 2px;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      top: 7px;
+      right: 0;
+      width: 29px;
+      height: 4px;
+      background-image: url(./../../../../assets/images/rightLongArrow.png);
+      transform: translateX(50%);
+    }
+    &:last-child::after {
+      display: none;
+    }
+  }
+}
