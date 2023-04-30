@@ -1,0 +1,32 @@
+/* tslint:disable */
+/* eslint-disable */
+{{>licenseInfo}}
+{{^withSeparateModelsAndApi}}
+{{#withNodeImports}}
+// URLSearchParams not necessarily used
+import { URL, URLSearchParams } from 'url';
+{{#multipartFormData}}
+import FormData from 'form-data'
+{{/multipartFormData}}
+{{/withNodeImports}}
+import { request, type RequestOptions } from '@/utils/http'
+import { {{!DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, toPathString, createRequestFunction,}}serializeDataIfNeeded } from './common'
+
+type DeepRequired<T> = {
+  [P in keyof T]-?: T[P] extends Object ? DeepRequired<T[P]> : T[P];
+}
+type cPick<T, K extends keyof T> = DeepRequired<DeepRequired<T>[K]>
+type isHasData<T, K> = K extends keyof T ? cPick<T, K> : T
+{{#apiInfo}}{{#apis}}
+{{>apiInner}}
+{{/apis}}{{/apiInfo}}
+
+{{#models}}
+{{#model}}{{#isEnum}}{{>modelEnum}}{{/isEnum}}{{#oneOf}}{{#-first}}{{>modelOneOf}}{{/-first}}{{/oneOf}}{{^isEnum}}{{^oneOf}}{{>modelGeneric}}{{/oneOf}}{{/isEnum}}{{/model}}
+{{/models}}
+{{/withSeparateModelsAndApi}}
+
+{{#withSeparateModelsAndApi}}
+{{#apiInfo}}{{#apis}}{{#operations}}export * from './{{tsApiPackage}}/{{classFilename}}';
+{{/operations}}{{/apis}}{{/apiInfo}}
+{{/withSeparateModelsAndApi}}

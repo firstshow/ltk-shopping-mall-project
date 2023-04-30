@@ -1,0 +1,15 @@
+templateDir: openapi/custom-generator
+additionalProperties:
+  artifactId: typescript-axios-client
+  withSeparateModelsAndApi: false # 将模型和 api 放在单独的文件夹和单独的类中。这需要为“ apiPackage”和“ model Package”增加一个值
+  withoutPrefixEnums: false # true 不要在枚举名称前面加上类名称，因为后端参数类名会有重复，所以不能设置为true
+  useSingleRequestParameter: true # 设置为 true 将生成包含所有 API 端点参数的单个参数的函数，而不是为每个参数生成一个参数。
+  withNodeImports: false # 设置为 true 将为 NodeJS 添加导入
+  stringEnums: false # 为枚举值生成字符串枚举而不是对象
+  apiPackage: api
+  modelPackage: models
+  supportsES6: true
+files:
+  index.mustache:
+    templateType: SupportingFiles
+    destinationFilename: index.ts

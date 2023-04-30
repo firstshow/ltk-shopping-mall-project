@@ -1,0 +1,1 @@
+java -jar openapi-generator-cli.jar generate -g typescript-axios --skip-validate-spec -o src/api/generator/ -c config.yaml -i "http://127.0.0.1:4523/export/openapi?projectId=2063186&specialPurpose=openapi-generator"

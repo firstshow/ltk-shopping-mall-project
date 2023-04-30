@@ -1,0 +1,103 @@
+{{>licenseInfo}}
+{{#withSeparateModelsAndApi}}
+/* tslint:disable */
+/* eslint-disable */
+{{#withNodeImports}}
+// URLSearchParams not necessarily used
+import { URL, URLSearchParams } from 'url'
+{{#multipartFormData}}
+import FormData from 'form-data'
+{{/multipartFormData}}
+{{/withNodeImports}}
+import { request, type RequestOptions } from '@/utils/http'
+// import { Configuration } from '{{apiRelativeToRoot}}configuration'
+import { {{!DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, toPathString, createRequestFunction,}}serializeDataIfNeeded } from '{{apiRelativeToRoot}}common'
+import type {
+  {{#imports}}
+  {{classname}},
+  {{/imports}}
+} from '{{apiRelativeToRoot}}{{tsModelPackage}}'
+
+type DeepRequired<T> = {
+  [P in keyof T]-?: T[P] extends Object ? DeepRequired<T[P]> : T[P]
+}
+type cPick<T, K extends keyof T> = DeepRequired<DeepRequired<T>[K]>
+type isHasData<T, K> = K extends keyof T ? cPick<T, K> : T
+{{/withSeparateModelsAndApi}}
+{{^withSeparateModelsAndApi}}
+{{/withSeparateModelsAndApi}}
+{{#operations}}
+
+/**
+ * {{classname}} - axios fetch{{#description}}
+ * {{&description}}{{/description}}
+ * @export
+ */
+export const {{classname}}Fetch = {
+  {{#operation}}
+  /**
+   {{#summary}}
+   * @function {{&summary}}
+   {{/summary}}
+   * @parent {{classname}}Fetch
+   {{#allParams}}
+   * @param {{=<% %>=}}{<%&dataType%>}<%={{ }}=%> {{^required}}[{{/required}}{{paramName}}{{^required}}]{{/required}} {{description}}
+   {{/allParams}}
+   * @param {*} [options] Override http request option.{{#isDeprecated}}
+   * @deprecated{{/isDeprecated}}
+   * @throws {RequiredError}
+   */
+  {{nickname}}: (
+    {{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{{dataType}}},{{/allParams}}
+    options?: RequestOptions
+  ): Promise<isHasData<{{returnType}}, 'data'>{{^returnType}}void{{/returnType}}> => {
+  {{#allParams}}
+  {{#required}}
+    // verify required parameter '{{paramName}}' is not null or undefined
+    assertParamExists('{{nickname}}', '{{paramName}}', {{paramName}})
+  {{/required}}
+  {{/allParams}}
+    const localVarPath = `{{{path}}}`{{#pathParams}}
+      .replace(`{${"{{baseName}}"}}`, encodeURIComponent(String({{paramName}}))){{/pathParams}}
+    const localVarRequestOptions = {} as any
+    {{#vendorExtensions}}{{#hasFormParams}}
+    const localVarFormParams = new {{^multipartFormData}}URLSearchParams(){{/multipartFormData}}{{#multipartFormData}}FormData(){{/multipartFormData}}{{/hasFormParams}}{{/vendorExtensions}}
+  {{#vendorExtensions}}
+    {{#formParams}}
+      {{#isArray}}
+      if ({{paramName}}) {
+      {{#isCollectionFormatMulti}}
+        {{paramName}}.forEach((element) => {
+          localVarFormParams.{{#multipartFormData}}append{{/multipartFormData}}{{^multipartFormData}}set{{/multipartFormData}}('{{baseName}}', element as any)
+        })
+      {{/isCollectionFormatMulti}}
+      {{^isCollectionFormatMulti}}
+        localVarFormParams.{{#multipartFormData}}append{{/multipartFormData}}{{^multipartFormData}}set{{/multipartFormData}}('{{baseName}}', {{paramName}}.join(COLLECTION_FORMATS.{{collectionFormat}}))
+      {{/isCollectionFormatMulti}}
+      }{{/isArray}}
+      {{^isArray}}
+      if ({{paramName}} !== undefined) { {{^multipartFormData}}
+        localVarFormParams.set('{{baseName}}', {{paramName}} as any){{/multipartFormData}}{{#multipartFormData}}{{#isPrimitiveType}}
+        localVarFormParams.append('{{baseName}}', {{paramName}} as any){{/isPrimitiveType}}{{^isPrimitiveType}}
+        localVarFormParams.append('{{baseName}}', new Blob([JSON.stringify({{paramName}})], { type: "application/json", })){{/isPrimitiveType}}{{/multipartFormData}}
+      }{{/isArray}}
+    {{/formParams}}
+  {{/vendorExtensions}}
+  {{#hasFormParams}}
+    localVarRequestOptions.data = localVarFormParams{{#vendorExtensions}}{{^multipartFormData}}.toString(){{/multipartFormData}}{{/vendorExtensions}}
+  {{/hasFormParams}}
+  {{#bodyParam}}
+    localVarRequestOptions.data = serializeDataIfNeeded(
+      {{paramName}},
+      localVarRequestOptions
+    )
+  {{/bodyParam}}
+    return request({
+      data: localVarRequestOptions.data,
+      url: localVarPath,
+      ...options
+    })
+  },
+  {{/operation}}
+}
+{{/operations}}

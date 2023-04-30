@@ -1,0 +1,11 @@
+// 修改变量
+// 由于 CSS 变量继承机制的原因，两者的修改方式有一定差异：
+
+// 基础变量只能通过 root 选择器 修改，不能通过 ConfigProvider 组件 修改。
+// 组件变量可以通过 root 选择器 和 ConfigProvider 组件 修改。
+
+:root {
+  // 按钮
+  --van-button-primary-background-color: #ff5344;
+  --van-button-primary-border-color: #ff5344;
+}

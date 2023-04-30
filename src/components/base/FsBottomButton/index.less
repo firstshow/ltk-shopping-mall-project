@@ -1,0 +1,16 @@
+.fs-bottom-button {
+  z-index: 2000;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 64px;
+  padding: 10px 28px;
+  background: #fff;
+}
+
+.safe-area-inset-bottom {
+  // height: calc(64px + constant(safe-area-inset-bottom));
+  height: calc(64px + env(safe-area-inset-bottom));
+}
