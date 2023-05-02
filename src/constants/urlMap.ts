@@ -6,5 +6,6 @@ function getImageUrl(name) {
 }
 
 export const LOGICAL_IMAGE = {
-  iconData: getImageUrl('data.svg') // TODO 示例图片，请删除
+  iconData: getImageUrl('data.svg'), // TODO 示例图片，请删除
+  receiveTipsImg: getImageUrl('receiveTipsImg.svg') // TODO 示例图片，请删除
 }

@@ -64,7 +64,7 @@ const getHeaderParams = (obj) => {
   }
 }
 
-const baseUrl = '/api'
+const baseUrl = 'https://group-guest-api.netmi.com.cn'
 const fsFetch = new FsFetch()
 fsFetch.setInterceptor(false)
 fsFetch.setMockUrl('http://127.0.0.1:4523/mock/1080891/')
@@ -143,13 +143,14 @@ export const request = <T = any>(reqOptions: RequestOptions = {}): Promise<T> =>
     data,
     header: {
       ...headerParams,
-      token: defaultOption.noToken ? undefined : Utils.local.getItem(ACCESS_TOKEN_KEY),
+      'content-type': 'application/x-www-form-urlencoded',
+      'X-Access-Token': defaultOption.noToken ? undefined : Utils.local.getItem(ACCESS_TOKEN_KEY),
       traceId
     },
     baseUrl,
-    formatType: 'json',
+    formatType: 'formdata',
     sendRawData: true,
-    returnRawData: reqOptions.isMock,
+    returnRawData: true,
     method: defaultOption.method,
     retryTimes: defaultOption.retryTimes,
     isMock: defaultOption.isMock,

@@ -24,17 +24,17 @@
       secondLineText: '跳转抖音'
     },
     {
-      iconName: 'shoppingCart',
+      iconName: 'IconShoppingCart',
       firstLineText: '直播间',
       secondLineText: '小房子下单'
     },
     {
-      iconName: 'orderSuccess',
+      iconName: 'IconOrderSuccess',
       firstLineText: '下单成功',
       secondLineText: '复制订单号'
     },
     {
-      iconName: 'orderEnter',
+      iconName: 'IconOrderEnter',
       firstLineText: '提交订单号',
       secondLineText: '领取返利'
     }

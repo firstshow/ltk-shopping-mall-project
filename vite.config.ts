@@ -37,10 +37,10 @@ export default ({ mode }: ConfigEnv): UserConfig => {
       vue(),
       vueJsx(),
       WindiCSS({
-        scan: {  
-          dirs: ['./src'], // 当前目录下所有文件  
-          fileExtensions: ['vue', 'js', 'ts'], // 同时启用扫描vue/js/ts 
-        } 
+        scan: {
+          dirs: ['./src'], // 当前目录下所有文件
+          fileExtensions: ['vue', 'js', 'ts'], // 同时启用扫描vue/js/ts
+        }
       }),
       AutoImport({
         imports: ['vue', 'vue-router'],

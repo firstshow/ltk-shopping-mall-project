@@ -1,0 +1,29 @@
+.border-around(@width: 1px; @style: solid; @color: @ltk-theme-color) {
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    border: @width @style @color;
+    transform: translate3d(-50%, -50%, 0)  scale(0.5);
+  }
+}
+
+.border-bottom(@width: 1px; @style: solid; @color: @ltk-theme-color) {
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    border-bottom: @width @style @color;
+    transform: translate3d(-50%, -50%, 0)  scale(0.5);
+  }
+}
+
+.safe-area-inset-bottom {
+  padding-bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+}

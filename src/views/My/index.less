@@ -1,0 +1,57 @@
+.my-page {
+  padding: 0 12px;
+  .x-my-profile-box {
+    padding: 16px 0;
+    .x-header-img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+    }
+    .x-nickname {
+      margin-left: 12px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+
+  .x-statistics—box {
+    position: relative;
+    padding: 18px 0 10px;
+    background-color: @ltk-theme-color;
+    border-radius: 12px 12px 0 0;
+    text-align: center;
+    color: @white;
+    .x-statistics-item {
+      flex: auto;
+      .x-key {
+        font-size: 12px;
+      }
+      .x-value {
+        font-size: 18px;
+        font-weight: bold;
+      }
+    }
+    .x-tips {
+      display: inline-block;
+      margin-top: 16px;
+      font-size: 10px;
+    }
+    &::after {
+      content: '';
+      z-index: 1;
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-top: 12px solid @ltk-theme-color;
+      border-right: 12px solid transparent;
+      border-left: 12px solid transparent;
+      transform: translateX(-50%);
+    }
+  }
+  .x-receive-list {
+    margin-top: 20px;
+    padding-bottom: 30px;
+  }
+}
