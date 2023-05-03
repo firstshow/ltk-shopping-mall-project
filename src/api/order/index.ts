@@ -6,8 +6,7 @@ import { request } from '@/utils/http'
 export function getOrderStatisticsServer() {
   return request({
     url: '/api/ltk/ltkLiveOrder-api/statistics',
-    method: 'GET',
-    noToken: true
+    method: 'GET'
   })
 }
 
@@ -18,7 +17,6 @@ export function getOrderListServer(data: API.OrderListParams) {
   return request({
     url: '/api/ltk/ltkLiveOrder-api/page',
     data,
-    method: 'GET',
-    noToken: true
+    method: 'GET'
   })
 }

@@ -24,7 +24,7 @@ export function getGoodsListServer(data: API.GoodsListParams) {
 }
 
 /**
- * @api 获取商品列表
+ * @api 进入直播间接口，进入直播间后，将讲解的商品展示为当前的商品
  */
 export function enterLiveRoomServer(data: API.EnterLiveRoomParams) {
   return request({
@@ -35,7 +35,7 @@ export function enterLiveRoomServer(data: API.EnterLiveRoomParams) {
 }
 
 /**
- * @api 获取商品列表
+ * @api 申请返利奖励接口
  */
 export function receivePrizeServer(data: API.ApplyReceivePrizeParams) {
   return request({

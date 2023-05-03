@@ -7,7 +7,7 @@
  */
 export async function getClipboard(): Promise<string> {
   try {
-    const text = await navigator.clipboard.readText()
+    const text = await navigator.clipboard?.readText()
     console.log('Pasted content: ', text)
     return text || ''
   } catch (err) {

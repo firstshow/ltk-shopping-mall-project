@@ -15,6 +15,9 @@ import { showToast } from 'vant'
 import { getRandomString, sortArrayObj } from './public'
 import logger from './logger'
 import dayjs from 'dayjs'
+import { useUserStore } from '@/stores/modules/user'
+const userStore = useUserStore()
+
 
 export interface RequestOptions<D = any> {
   url?: string
@@ -143,12 +146,12 @@ export const request = <T = any>(reqOptions: RequestOptions = {}): Promise<T> =>
     data,
     header: {
       ...headerParams,
-      'content-type': 'application/x-www-form-urlencoded',
-      'X-Access-Token': defaultOption.noToken ? undefined : Utils.local.getItem(ACCESS_TOKEN_KEY),
+      token: '11222',
+      'X-Access-Token': defaultOption.noToken ? undefined : userStore.accessToken,
       traceId
     },
     baseUrl,
-    formatType: 'formdata',
+    formatType: 'json',
     sendRawData: true,
     returnRawData: true,
     method: defaultOption.method,

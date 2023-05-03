@@ -9,7 +9,7 @@
       <div class="x-inside-box">
         <!-- S 商品类目筛选 -->
         <div class="x-category-selection flex">
-          <ul>
+          <ul class="flex flex-nowrap">
             <li
             :class="['x-category-item', selectedCategoryName === item ? 'x-item-selected' : '']"
             v-for="item in data.categoryList"
@@ -49,7 +49,7 @@
     <!-- S 领取奖励的弹框 -->
     <receive-popup
       :show="showReceivePopup"
-      v-model:orderSn="data.orderNo"
+      v-model:orderNo="data.orderNo"
       @close="closeReceivePopup"
       @onClick="applyReceivePrize"
     />
@@ -61,15 +61,18 @@
   import ShoppingTips from '@/views/Home/components/ShoppingTips/index.vue'
   import ProductItem from '@/views/Home/components/ProductItem/index.vue'
   import ReceivePopup from '@/views/Home/components/ReceivePopup/index.vue'
-  import { routeChange } from '@/hooks'
-  import { ROUTE_MAP } from '@/constants'
+  import { routeChange, checkOrderNo } from '@/hooks'
+  import { ROUTE_MAP, DOUYIN_ORDER_NO_REG } from '@/constants'
   import {
     getCategoryListServer,
     getGoodsListServer,
     enterLiveRoomServer,
     receivePrizeServer
   } from '@/api'
+  import { useUserStore } from '@/stores/modules/user'
+  import { showLoadingToast, closeToast, showToast } from 'vant'
 
+  const userStore = useUserStore()
   defineOptions({
     name: 'Home'
   })
@@ -122,6 +125,12 @@
    */
    const getGoodsList = async () => {
     try {
+      showLoadingToast({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 500
+      })
+
       let { keyword, pageNo, pageSize } = data.goodsListQueryParams
       let resData = await getGoodsListServer({
         category: selectedCategoryName.value,
@@ -139,8 +148,10 @@
       data.total = resData.result.total
       data.goodsListQueryParams.pageNo++
       data.finished = data.goodsList.length >= data.total
+      closeToast()
     } catch (error) {
       data.loading = false
+      closeToast()
       console.log('获取商品列表失败', error)
     }
    }
@@ -177,13 +188,13 @@
   const showReceivePopup = ref(false)
 
   /**
-   * @function 打开领取眼眶
+   * @function 打开领取弹框
    */
   const openReceivePopup = () => {
     showReceivePopup.value = true
   }
    /**
-   * @function 关闭领取眼眶
+   * @function 关闭领取弹框
    */
   const closeReceivePopup = () => {
     showReceivePopup.value = false
@@ -213,12 +224,26 @@
    * @function 领取奖励
    */
    const applyReceivePrize = async () => {
+    // 检查订单号是否正确，一定要符合抖音的订单号规则
+    if (checkOrderNo(data.orderNo)) {
+      showToast({ message: '请复制8开头的19位抖音订单号' })
+      return false
+    }
+
     try {
+      showLoadingToast({
+        message: '提交中...',
+        forbidClick: true,
+        duration: 500
+      })
+
       let resData = await receivePrizeServer({
         orderNo: data.orderNo
       })
+      closeToast()
       console.log('申请领取奖励成功：', resData)
     } catch (error) {
+      closeToast()
       console.log('申请领取奖励失败：', error)
     }
    }
@@ -231,6 +256,9 @@
   onMounted(() => {
     console.log('ScenePage ~ onMounted')
     getCategoryListFn()
+    userStore.setUserInfo({
+      accessToken: '75183a6c-1d32-4314-a852-b4465bce172e'
+    })
   })
   /******************************** E 生命周期钩子函数业务逻辑 ***********************************/
 </script>

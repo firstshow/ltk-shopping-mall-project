@@ -7,17 +7,16 @@
     border-top-right-radius: 24px;
     background-color: @gray-9;
     .x-category-selection {
+      overflow: auto;
       margin: 16px 0 0 0;
-      padding: 20px 22px;
+      padding: 20px 22px 30px;
       font-size: 14px;
-      ul, li {
-        flex-wrap: nowrap;
-      }
       .x-category-item {
         z-index: 1;
         display: inline-block;
         margin-right: 24px;
         color: @ltk-text-color;
+        white-space: nowrap;
       }
       .x-item-selected {
         position: relative;
@@ -38,7 +37,10 @@
       }
     }
     .x-list {
+      z-index: 111;
+      position: relative;
       padding-bottom: 80px;
+      transform: translateY(-10px);
     }
   }
 }

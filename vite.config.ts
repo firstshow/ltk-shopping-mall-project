@@ -79,10 +79,10 @@ export default ({ mode }: ConfigEnv): UserConfig => {
     server: {
       host: true,
       proxy: {
-        '/api': {
+        '/api1': {
           target: VITE_BASE_API,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, '/api')
+          rewrite: (path) => path.replace(/^\/api1/, '/api')
         }
       }
     }
