@@ -14,7 +14,7 @@
 
     <!-- S 弹框头部 -->
     <div class="x-receive-body">
-      <van-field ref="receiveOrderSnInput" v-model="orderSn" type="number" placeholder="请输入订单号">
+      <van-field ref="receiveOrderSnInput" v-model="orderNo" type="number" placeholder="请输入订单号">
         <template #button>
           <van-button plain hairline size="small" type="primary" @click="pasteOrderSn">黏贴订单号</van-button>
         </template>
@@ -39,18 +39,17 @@
       type: Boolean,
       default: false
     },
-    orderSn: {
+    orderNo: {
       type: String,
       default: ''
     }
   })
-  /******************************** S 订单号操作区域 ***********************************/
-  // 抖音订单号
-  // 输入框内容
   const emit = defineEmits(['update:orderSn', 'close', 'onClick'])
-  const orderSn = computed({
+  /******************************** S 订单号操作区域 ***********************************/
+  // 输入框内容，抖音订单号，做双向绑定
+  const orderNo = computed({
     get: () => {
-      return props.orderSn
+      return props.orderNo
     },
     set: (val) => {
       emit('update:orderSn', val)
@@ -64,7 +63,7 @@
    */
   const pasteOrderSn = async () => {
     let text = await getClipboard()
-    orderSn.value = text
+    orderNo.value = text
   }
   /******************************** E 订单号操作区域 ***********************************/
 </script>

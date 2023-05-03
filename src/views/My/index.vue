@@ -83,7 +83,7 @@
    */
   const getOrderList = async () => {
     try {
-      let { keyword, pageNo, pageSize } = data.orderListQueryParams
+      let { pageNo, pageSize } = data.orderListQueryParams
       let resData = await getOrderListServer({
         pageNo,
         pageSize,

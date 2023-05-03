@@ -4,7 +4,7 @@ import { request } from '@/utils/http'
  * @api 获取类目列表
  */
 export function getCategoryListServer() {
-  return request<string[]>({
+  return request<API.resResult<string[]>>({
     url: '/api/ltk/ltkLiveGoods-api/categoryList',
     data: {},
     method: 'GET',
@@ -16,7 +16,7 @@ export function getCategoryListServer() {
  * @api 获取商品列表
  */
 export function getGoodsListServer(data: API.GoodsListParams) {
-  return request<API.ListResult<API.GoodsInfo[]>>({
+  return request<API.resResult<API.GoodsList>>({
     url: '/api/ltk/ltkLiveGoods-api/page',
     data,
     method: 'GET'
@@ -37,7 +37,7 @@ export function enterLiveRoomServer(data: API.EnterLiveRoomParams) {
 /**
  * @api 获取商品列表
  */
-export function receivePrizeServer(data: API.ReceivePrizeParams) {
+export function receivePrizeServer(data: API.ApplyReceivePrizeParams) {
   return request({
     url: '/api/ltk/ltkLiveOrder-api/add',
     data,

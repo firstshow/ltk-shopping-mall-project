@@ -29,7 +29,7 @@
           @load="onGoodsListLoad"
         >
           <product-item
-            v-for="(item, index) in data.goodsList"
+            v-for="(item) in data.goodsList"
             :data="item"
             @onClick="enterLiveRoom"
           />
@@ -49,9 +49,9 @@
     <!-- S 领取奖励的弹框 -->
     <receive-popup
       :show="showReceivePopup"
-      v-model:orderSn="data.orderSn"
+      v-model:orderSn="data.orderNo"
       @close="closeReceivePopup"
-      @onClick="receivePrize"
+      @onClick="applyReceivePrize"
     />
     <!-- E 领取奖励的弹框 -->
   </root-page>
@@ -75,8 +75,8 @@
   })
 
   let data = reactive({
-    categoryList: [], // 类目列表
-    goodsList: [], // 商品列表
+    categoryList: [] as string[], // 类目列表
+    goodsList: [] as API.GoodsInfo[], // 商品列表
     goodsListQueryParams: {
       category: '',
       keyword: '',
@@ -86,7 +86,7 @@
     loading: false, // 是在加载中
     finished: false, // 是否加载完成
     total: 0, // 总共商品数据条数
-    orderSn: '' // 返利订单号
+    orderNo: '' // 返利订单号
   })
 
   /******************************** S 类目相关业务逻辑 ***********************************/
@@ -161,9 +161,14 @@
     * @param id 商品ID
     */
    const enterLiveRoom = async (id: number) => {
-    let resData = await enterLiveRoomServer({
-      id
-    })
+    try {
+      let resData = await enterLiveRoomServer({
+        id
+      })
+      console.log('进入直播间成功：', resData)
+    } catch (error) {
+      console.log('进入直播间失败：', error)
+    }
    }
 
   /******************************** E 商品相关业务逻辑 ***********************************/
@@ -207,10 +212,15 @@
   /**
    * @function 领取奖励
    */
-   const receivePrize = async (id: number) => {
-    let resData = await receivePrizeServer({
-      orderSn: data.orderSn
-    })
+   const applyReceivePrize = async () => {
+    try {
+      let resData = await receivePrizeServer({
+        orderNo: data.orderNo
+      })
+      console.log('申请领取奖励成功：', resData)
+    } catch (error) {
+      console.log('申请领取奖励失败：', error)
+    }
    }
 
 
