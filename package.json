@@ -18,11 +18,10 @@
     "lint:lint-staged": "lint-staged",
     "prepare": "husky install",
     "commit": "cz",
-    "api": "sh ./openapi/generator.sh",
-    "postinstall": "patch-package"
+    "api": "sh ./openapi/generator.sh"
   },
   "dependencies": {
-    "@fubei/web-fetch": "^0.0.7",
+    "@fubei/web-fetch": "^0.0.8",
     "@fubei/web-logger": "^0.0.12",
     "@fubei/web-sls": "^0.0.13",
     "dayjs": "^1.11.5",

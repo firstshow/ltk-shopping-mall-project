@@ -11,15 +11,15 @@
     <div class="x-statistics—box">
       <ul class="flex  justify-between">
         <li class="x-statistics-item flex flex-col items-center">
-          <span class="x-value">18</span>
-          <span class="x-key">累计订单</span>
+          <span class="x-value">{{ data.commissionStatisticsInfo.receiveOrder }}</span>
+          <span class="x-key">已返订单</span>
         </li>
         <li class="x-statistics-item flex flex-col items-center">
-          <span class="x-value">￥22.0</span>
+          <span class="x-value">￥{{ data.commissionStatisticsInfo.totalCommission }}</span>
           <span class="x-key">累计返利</span>
         </li>
         <li class="x-statistics-item flex flex-col items-center">
-          <span class="x-value">2</span>
+          <span class="x-value">{{ data.commissionStatisticsInfo.waitReceiveCommission }}</span>
           <span class="x-key">待返订单</span>
         </li>
       </ul>
@@ -34,26 +34,51 @@
       finished-text="没有更多了"
       @load="onOrderListLoad"
       >
-      <receive-item :status="1" />
-      <receive-item :status="2" />
-      <receive-item :status="2" />
-      <receive-item :status="2" />
+      <receive-item
+        v-for="(item) in data.orderList"
+        :key="item.id"
+        :data="item"
+      />
     </van-list>
   </root-page>
 </template>
 
 <script setup lang="ts">
   import ReceiveItem from '@/views/My/components/receiveItem/index.vue'
+  import { showLoadingToast, closeToast } from 'vant'
   import {
-    getOrderStatisticsServer,
+    getOrderCommissionStatisticsServer,
     getOrderListServer
   } from '@/api'
+
   defineOptions({
     name: 'My'
   })
 
   let data = reactive({
-    orderList: [], // 商品列表
+    commissionStatisticsInfo: {
+      receiveOrder: 22, // 已返订单
+      totalCommission: 899.99, // 返现汇总
+      waitReceiveCommission: 1 // 待返订单
+    } as API.CommissionStatisticsInfo,
+    orderList: [{
+        "id": "1652691849866928129",
+        "createTime": "2023-04-30 23:10:17",
+        "orderNo": "123456",
+        "list": [
+          {
+            "id": "1",
+            "createTime": "2023-05-01 19:49:12",
+            "commission": 1,
+            "status": "waitVerify"
+          }
+        ]
+      },{
+        "id": "1652691849866928129",
+        "createTime": "2023-04-30 23:10:17",
+        "orderNo": "123456",
+        "list": []
+      }] as API.OrderInfo[], // 商品列表
     orderListQueryParams: {
       category: '',
       keyword: '',
@@ -68,7 +93,7 @@
   /******************************** S 佣金统计逻辑区域 ***********************************/
   const getOrderStatistics = async () => {
     try {
-      let resData = await getOrderStatisticsServer()
+      let resData = await getOrderCommissionStatisticsServer()
       console.log('获取到的订单佣金统计数据成功：', resData)
     } catch (error) {
       console.log('获取到的订单佣金统计数据失败：', error)
@@ -82,6 +107,12 @@
    * @function 获取订单列表
    */
   const getOrderList = async () => {
+    showLoadingToast({
+      message: '加载中...',
+      forbidClick: true,
+      duration: 500
+    })
+
     try {
       let { pageNo, pageSize } = data.orderListQueryParams
       let resData = await getOrderListServer({
@@ -93,13 +124,14 @@
       } else {
         data.orderList = data.orderList.concat(resData.result.records)
       }
-      console.log('当前的商品列表：', data.total, data.orderList.length, data.orderListQueryParams.pageNo, data.orderList)
       data.loading = false
       data.total = resData.result.total
       data.orderListQueryParams.pageNo++
       data.finished = data.orderList.length >= data.total
+      closeToast()
     } catch (error) {
       data.loading = false
+      closeToast()
       console.log('获取商品列表失败', error)
     }
    }

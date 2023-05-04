@@ -27,7 +27,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { LOGICAL_IMAGE } from '@/constants'
-import { getClipboard, checkOrderNo } from '@/hooks'
+import { getClipboardContent, checkOrderNo } from '@/hooks'
 import { showToast } from 'vant'
 const props = defineProps({
   // 是否显示弹层
@@ -59,7 +59,7 @@ const receiveOrderSnInput = ref<HTMLElement>()
  * @function 黏贴订单号
  */
 const pasteOrderSn = async () => {
-  let text = await getClipboard()
+  let text = await getClipboardContent()
 
   if (checkOrderNo(text)) {
     showToast({ message: '请复制8开头的19位抖音订单号' })

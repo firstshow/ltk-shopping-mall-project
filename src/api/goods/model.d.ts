@@ -45,10 +45,10 @@ declare namespace API {
    * @type 商品信息
    */
   type GoodsList = {
-    pages: number // 商品id
     records: GoodsInfo[] // 列表数据
-    size: number // 商品名称
-    total: number // 商品价格
+    pages: number // 当前第几页
+    size: number // 单页长度
+    total: number // 列表总数
   }
 
   /**

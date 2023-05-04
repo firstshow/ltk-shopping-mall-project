@@ -147,7 +147,6 @@ export const request = <T = any>(reqOptions: RequestOptions = {}): Promise<T> =>
     header: {
       ...headerParams,
       token: '11222',
-      'X-Access-Token': defaultOption.noToken ? undefined : userStore.accessToken,
       traceId
     },
     baseUrl,

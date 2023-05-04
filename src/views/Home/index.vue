@@ -62,7 +62,7 @@
   import ProductItem from '@/views/Home/components/ProductItem/index.vue'
   import ReceivePopup from '@/views/Home/components/ReceivePopup/index.vue'
   import { routeChange, checkOrderNo } from '@/hooks'
-  import { ROUTE_MAP, DOUYIN_ORDER_NO_REG } from '@/constants'
+  import { ROUTE_MAP } from '@/constants'
   import {
     getCategoryListServer,
     getGoodsListServer,
@@ -173,6 +173,7 @@
     */
    const enterLiveRoom = async (id: number) => {
     try {
+      window.location.href = 'https://v.douyin.com/DtGUBQM/'
       let resData = await enterLiveRoomServer({
         id
       })
