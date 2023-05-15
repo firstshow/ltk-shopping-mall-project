@@ -6,7 +6,9 @@ import { request } from '@/utils/http'
 export function getCategoryListServer() {
   return request<API.resResult<string[]>>({
     url: '/api/ltk/ltkLiveGoods-api/categoryList',
-    data: {},
+    data: {
+      kkk: 1
+    },
     method: 'GET',
     noToken: true
   })

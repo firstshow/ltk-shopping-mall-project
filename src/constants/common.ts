@@ -27,3 +27,12 @@ export const ERROR_HANDLER = {
     // 登录超时
   }
 }
+
+/**
+ * @constant 错误处理
+ */
+export const MOBILE_PLATFORM = {
+  ios: 'ios',
+  android: 'android',
+  windows: 'windows'
+}

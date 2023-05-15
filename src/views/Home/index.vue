@@ -29,9 +29,10 @@
           @load="onGoodsListLoad"
         >
           <product-item
-            v-for="(item) in data.goodsList"
+            v-for="(item, index) in data.goodsList"
+            :key="index"
             :data="item"
-            @onClick="enterLiveRoom"
+            @onClick="enterLiveRoom(item, item.liveRoomUrl)"
           />
         </van-list>
         <!-- E 商品列表 -->
@@ -55,14 +56,15 @@
     />
     <!-- E 领取奖励的弹框 -->
   </root-page>
+
 </template>
 
 <script setup lang="ts">
   import ShoppingTips from '@/views/Home/components/ShoppingTips/index.vue'
   import ProductItem from '@/views/Home/components/ProductItem/index.vue'
   import ReceivePopup from '@/views/Home/components/ReceivePopup/index.vue'
-  import { routeChange, checkOrderNo } from '@/hooks'
-  import { ROUTE_MAP } from '@/constants'
+  import { routeChange, checkOrderNo, getLiveRoomUrlByPlatform, setClipboardContent } from '@/hooks'
+  import { ROUTE_MAP, MOBILE_PLATFORM } from '@/constants'
   import {
     getCategoryListServer,
     getGoodsListServer,
@@ -70,7 +72,8 @@
     receivePrizeServer
   } from '@/api'
   import { useUserStore } from '@/stores/modules/user'
-  import { showLoadingToast, closeToast, showToast } from 'vant'
+  import { showLoadingToast, closeToast, showToast, showDialog } from 'vant'
+  import { getMobilePlatform } from '@/utils/device'
 
   const userStore = useUserStore()
   defineOptions({
@@ -78,6 +81,7 @@
   })
 
   let data = reactive({
+    isShowDialog: true,
     categoryList: [] as string[], // 类目列表
     goodsList: [] as API.GoodsInfo[], // 商品列表
     goodsListQueryParams: {
@@ -171,15 +175,40 @@
     * @function 进入直播间，直播间商品切换成当前商品
     * @param id 商品ID
     */
-   const enterLiveRoom = async (id: number) => {
+   const enterLiveRoom = async (liveRoomInfo: any, liveRoomUrl: string) => {
+    let url = getLiveRoomUrlByPlatform(liveRoomUrl)
+    console.log('|||{{{}}}}}}', url)
     try {
-      window.location.href = 'https://v.douyin.com/DtGUBQM/'
+      let id = liveRoomInfo.id
       let resData = await enterLiveRoomServer({
         id
       })
-      console.log('进入直播间成功：', resData)
+      console.log('获取直播间参数成功：', resData)
+      jumpToLiveRoom(url)
     } catch (error) {
       console.log('进入直播间失败：', error)
+    }
+   }
+
+   /**
+    * @function 跳转到直播间，这边安卓和IOS处理不一样
+    * @param url 直播间地址
+    */
+   const jumpToLiveRoom = async (url: string) => {
+    switch (getMobilePlatform()) {
+      case MOBILE_PLATFORM.android:
+        await setClipboardContent(url)
+        showDialog({
+          title: '复制成功',
+          message: '请打开抖音APP，出现直播间弹框提示后，进入直播间下单',
+        })
+        break
+      case MOBILE_PLATFORM.ios:
+      case MOBILE_PLATFORM.windows:
+        window.location.href = url
+        break
+      default:
+        console.error('不属于任何一个平台')
     }
    }
 

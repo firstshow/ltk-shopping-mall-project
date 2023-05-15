@@ -61,24 +61,7 @@
       totalCommission: 899.99, // 返现汇总
       waitReceiveCommission: 1 // 待返订单
     } as API.CommissionStatisticsInfo,
-    orderList: [{
-        "id": "1652691849866928129",
-        "createTime": "2023-04-30 23:10:17",
-        "orderNo": "123456",
-        "list": [
-          {
-            "id": "1",
-            "createTime": "2023-05-01 19:49:12",
-            "commission": 1,
-            "status": "waitVerify"
-          }
-        ]
-      },{
-        "id": "1652691849866928129",
-        "createTime": "2023-04-30 23:10:17",
-        "orderNo": "123456",
-        "list": []
-      }] as API.OrderInfo[], // 商品列表
+    orderList: [] as API.OrderInfo[], // 商品列表
     orderListQueryParams: {
       category: '',
       keyword: '',
@@ -124,6 +107,7 @@
       } else {
         data.orderList = data.orderList.concat(resData.result.records)
       }
+      console.log('++++++', data.orderList)
       data.loading = false
       data.total = resData.result.total
       data.orderListQueryParams.pageNo++

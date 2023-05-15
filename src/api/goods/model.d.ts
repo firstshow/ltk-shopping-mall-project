@@ -24,7 +24,7 @@ declare namespace API {
    * @type 进入直播间请求参数
    */
   type EnterLiveRoomParams = {
-    id: number // 商品Id
+    id: string // 商品Id
   }
   /**
    * @type 领取返利请求参数
@@ -57,6 +57,9 @@ declare namespace API {
   type GoodsInfo = {
     shopInfo: string // 商品id
     list: GoodsCartList[] // 列表数据
+    liveRoomId: number // 直播间ID
+    liveRoomUrl: string // 直播间链接
+
   }
 
   /**
@@ -68,8 +71,6 @@ declare namespace API {
     category: string // 类目
     commissionAmount: number // 佣金
     commissionRate: number // 返佣率
-    liveRoomId: number // 直播间ID
-    liveRoomUrl: string // 直播间链接
     poiAddress: string // 门店地址
     sortNo: number // 商品排名
   }

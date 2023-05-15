@@ -66,9 +66,8 @@ const getHeaderParams = (obj) => {
     nonce
   }
 }
-
 const baseUrl = 'https://group-guest-api.netmi.com.cn'
-const fsFetch = new FsFetch()
+const fsFetch = new FsFetch({})
 fsFetch.setInterceptor(false)
 fsFetch.setMockUrl('http://127.0.0.1:4523/mock/1080891/')
 
@@ -109,7 +108,7 @@ fsFetch.customErrorHandle = (error, _reqData, reqOptions, context) => {
     ERROR_HANDLER[`${error.code}`]()
   } else if (!specialError) {
     // 当需要特殊处理，在调用的地方处理： 否则在同一错误里提示
-    showToast(error.errorMsg)
+    showToast(error.message)
   }
   logger.error(
     {
@@ -146,7 +145,7 @@ export const request = <T = any>(reqOptions: RequestOptions = {}): Promise<T> =>
     data,
     header: {
       ...headerParams,
-      token: '11222',
+      'X-Access-Token': '75183a6c-1d32-4314-a852-b4465bce172e',
       traceId
     },
     baseUrl,

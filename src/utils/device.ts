@@ -1,3 +1,5 @@
+import { MOBILE_PLATFORM } from '@/constants'
+
 /**
  * @function 判断是否是微信浏览器
  * */
@@ -48,16 +50,16 @@ export const isDouyinLiteBrowser = () => {
 /**
  * @function 判断手机是android还是ios
  * */
-export const mobileVersion = () => {
+export const getMobilePlatform = () => {
   const u = navigator.userAgent
   const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1 // android终端
   const isIos = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
 
   if (isAndroid) {
-    return 'android'
+    return MOBILE_PLATFORM.android
   } else if (isIos) {
-    return 'ios'
+    return MOBILE_PLATFORM.ios
   } else {
-    return 'windows'
+    return MOBILE_PLATFORM.windows
   }
 }

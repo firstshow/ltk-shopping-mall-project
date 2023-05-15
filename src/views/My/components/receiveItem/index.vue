@@ -5,12 +5,12 @@
         <span class="x-order-sn">订单 {{ data.orderNo }}</span>
         <svg-icon name="IconCopy" size="12" @click="copy()" />
       </h3>
-      <span class="x-receive-price" v-if="data.list.length > 0">+20</span>
+      <span class="x-receive-price" v-if="data.list?.length > 0">+{{ data.totalCommission }}</span>
     </div>
     <p class="x-submit-time">{{ data.createTime }} 提交</p>
 
     <!-- S 未核销时的提示 -->
-    <ul class="x-received-list" v-if="data.list.length > 0">
+    <ul class="x-received-list" v-if="data.list?.length > 0">
       <li
         v-for="(item) in data.list"
         :key="(item as API.ReceiveRecordsInfo).id"
@@ -21,8 +21,6 @@
     <!-- S 未核销时的提示 -->
     <p class="x-write-off-tips" v-else>核销后即可领取返利，快去核销吧</p>
     <!-- E 未核销时的提示 -->
-
-
 
   </div>
 </template>

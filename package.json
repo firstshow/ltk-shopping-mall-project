@@ -24,6 +24,7 @@
     "@fubei/web-fetch": "^0.0.8",
     "@fubei/web-logger": "^0.0.12",
     "@fubei/web-sls": "^0.0.13",
+    "axios": "^1.4.0",
     "dayjs": "^1.11.5",
     "fshows-utils-tool": "^1.0.27",
     "md5": "^2.3.0",

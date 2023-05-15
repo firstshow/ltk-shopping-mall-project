@@ -27,9 +27,10 @@ export const getClipboardContent = async (isShowToast: boolean = true): Promise<
  */
 export const setClipboardContent = async (data: string, isShowToast: boolean = true) => {
   try {
-    await navigator.clipboard?.writeText(data)
+    let copyItem = await navigator.clipboard?.writeText(data)
     console.log(`copy content: ${data} 成功`)
     isShowToast && showToast('复制成功')
+    return copyItem
   } catch (err) {
     showToast('复制失败')
     console.error(`copy content: ${data} 失败`)

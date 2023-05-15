@@ -16,6 +16,7 @@ declare module '@vue/runtime-core' {
     SvgIcon: typeof import('./src/components/global/SvgIcon/SvgIcon.vue')['default']
     VanButton: typeof import('vant/es')['Button']
     VanCell: typeof import('vant/es')['Cell']
+    VanDialog: typeof import('vant/es')['Dialog']
     VanField: typeof import('vant/es')['Field']
     VanImage: typeof import('vant/es')['Image']
     VanList: typeof import('vant/es')['List']
