@@ -20,6 +20,7 @@
     "src/**/*.md"
   ],
   "compilerOptions": {
+    "ignoreDeprecations": "5.0",
     "jsx": "preserve",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
@@ -36,7 +37,11 @@
     ],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "lib": [
+      "ES2021",
+      "dom"
+    ]
   },
 
   "references": [

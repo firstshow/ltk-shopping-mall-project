@@ -9,12 +9,17 @@
 
     <div
       class="x-product-info-box flex"
-      @click="$emit('onClick', data.cardData.execution_plan.goodId)"
+      @click="$emit('onClick', data.cardData.groupon_id)"
     >
       <!-- S 商品图片区域 -->
       <div class="x-product-img">
         <span class="x-subscript">{{ data.sortNo }}</span>
-        <img :src="filterProductImg(data.cardData.image_info[0]?.web_url)" alt="商品图片">
+        <img
+          v-lazy="filterProductImg(data.cardData.image_info[0]?.web_url)"
+          :loading="LOGICAL_IMAGE.loading"
+          :error="LOGICAL_IMAGE.loadError"
+          alt="商品图片"
+        >
       </div>
       <!-- E 商品图片区域 -->
 
@@ -51,6 +56,7 @@
 </template>
 
 <script setup lang="ts">
+  import { LOGICAL_IMAGE } from '@/constants'
   defineOptions({
     name: 'Home'
   })

@@ -21,5 +21,6 @@ export const useUserStore = defineStore({
         ...data
       }
     }
-  }
+  },
+  persist: true,
 })

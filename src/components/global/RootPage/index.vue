@@ -5,7 +5,6 @@
 </template>
 
 <script lang="ts" setup>
-  import { useRoute } from 'vue-router'
   defineOptions({
     name: 'RootPage'
   })
@@ -15,7 +14,6 @@
       default: false
     }
   })
-  const route = useRoute()
 </script>
 <style lang="less">
   .root-page {

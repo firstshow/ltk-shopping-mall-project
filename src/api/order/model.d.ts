@@ -53,9 +53,9 @@ declare namespace API {
    * @type 获取订单列表返回参数
    */
   type CommissionStatisticsInfo = {
-    receiveOrder: number // 已返订单
+    rebateOrder: number // 已返订单
     totalCommission: number // 返现汇总
-    waitReceiveCommission: number // 待返订单
+    waitRebateOrder: number // 待返订单
   }
 }
 

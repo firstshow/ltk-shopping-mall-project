@@ -5,6 +5,8 @@ declare namespace API {
   type UserInfo = {
     accessToken?: string // 登录token
     openId?: string // 用户openid
+    nickname?: string // 昵称
+    avatar?: string // 头像
   }
 }
 

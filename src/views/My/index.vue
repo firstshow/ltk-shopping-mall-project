@@ -2,8 +2,8 @@
   <root-page class="my-page safe-area-inset-bottom">
     <!-- S 个人信息区域 -->
     <header class="x-my-profile-box flex items-center">
-      <img class="x-header-img" src="https://p26.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_7e01176dfc2671e81e15734c6168a6fb.jpeg?from=4010531038" alt="微信头像">
-      <span class="x-nickname">逛吃逛吃奥特曼</span>
+      <img class="x-header-img" :src="data.userInfo.avatar" alt="微信头像">
+      <span class="x-nickname">{{ data.userInfo.nickname }}</span>
     </header>
     <!-- E 个人信息区域 -->
 
@@ -11,7 +11,7 @@
     <div class="x-statistics—box">
       <ul class="flex  justify-between">
         <li class="x-statistics-item flex flex-col items-center">
-          <span class="x-value">{{ data.commissionStatisticsInfo.receiveOrder }}</span>
+          <span class="x-value">{{ data.commissionStatisticsInfo.rebateOrder }}</span>
           <span class="x-key">已返订单</span>
         </li>
         <li class="x-statistics-item flex flex-col items-center">
@@ -19,7 +19,7 @@
           <span class="x-key">累计返利</span>
         </li>
         <li class="x-statistics-item flex flex-col items-center">
-          <span class="x-value">{{ data.commissionStatisticsInfo.waitReceiveCommission }}</span>
+          <span class="x-value">{{ data.commissionStatisticsInfo.waitRebateOrder }}</span>
           <span class="x-key">待返订单</span>
         </li>
       </ul>
@@ -31,7 +31,7 @@
       class="x-receive-list"
       v-model="data.loading"
       :finished="data.finished"
-      finished-text="没有更多了"
+      finished-text="- 我是有底线的呦 -"
       @load="onOrderListLoad"
       >
       <receive-item
@@ -50,17 +50,16 @@
     getOrderCommissionStatisticsServer,
     getOrderListServer
   } from '@/api'
+  import { useUserStore } from '@/stores/modules/user'
+  const userStore = useUserStore()
 
   defineOptions({
     name: 'My'
   })
 
   let data = reactive({
-    commissionStatisticsInfo: {
-      receiveOrder: 22, // 已返订单
-      totalCommission: 899.99, // 返现汇总
-      waitReceiveCommission: 1 // 待返订单
-    } as API.CommissionStatisticsInfo,
+    userInfo: {} as API.UserInfo,
+    commissionStatisticsInfo: {} as API.CommissionStatisticsInfo,
     orderList: [] as API.OrderInfo[], // 商品列表
     orderListQueryParams: {
       category: '',
@@ -73,10 +72,21 @@
     total: 0 // 总共商品数据条数
   })
 
+  /******************************** S 用户信息逻辑区域 ***********************************/
+  /**
+   * @function 初始化用户信息
+   */
+  const initUserInfo = async () => {
+    const userInfo = userStore.userInfo
+    data.userInfo.avatar = userInfo.avatar
+    data.userInfo.nickname = userInfo.nickname
+  }
+
   /******************************** S 佣金统计逻辑区域 ***********************************/
   const getOrderStatistics = async () => {
     try {
       let resData = await getOrderCommissionStatisticsServer()
+      data.commissionStatisticsInfo = resData.result
       console.log('获取到的订单佣金统计数据成功：', resData)
     } catch (error) {
       console.log('获取到的订单佣金统计数据失败：', error)
@@ -135,6 +145,7 @@
     onMounted(() => {
     console.log('ScenePage ~ onMounted')
     getOrderStatistics()
+    initUserInfo()
   })
   /******************************** E 生命周期钩子函数业务逻辑 ***********************************/
 

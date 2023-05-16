@@ -10,9 +10,9 @@
     <!-- S 弹框头部 -->
     <div class="x-receive-body">
       <van-field ref="receiveOrderSnInput" v-model="inputVal" type="number" placeholder="请输入订单号">
-        <template #button>
+        <!-- <template #button>
           <van-button plain hairline size="small" type="primary" @click="pasteOrderSn">黏贴订单号</van-button>
-        </template>
+        </template> -->
       </van-field>
 
       <div class="x-receive-tips-box">
@@ -27,8 +27,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { LOGICAL_IMAGE } from '@/constants'
-import { getClipboardContent, checkOrderNo } from '@/hooks'
-import { showToast } from 'vant'
+// import { getClipboardContent, checkOrderNo } from '@/hooks'
+// import { showToast } from 'vant'
 const props = defineProps({
   // 是否显示弹层
   show: {
@@ -55,19 +55,19 @@ let inputVal = computed({
 // 订单号输入框元素
 const receiveOrderSnInput = ref<HTMLElement>()
 
-/**
- * @function 黏贴订单号
- */
-const pasteOrderSn = async () => {
-  let text = await getClipboardContent()
+// /**
+//  * @function 黏贴订单号
+//  */
+// const pasteOrderSn = async () => {
+//   let text = await getClipboardContent()
 
-  if (checkOrderNo(text)) {
-    showToast({ message: '请复制8开头的19位抖音订单号' })
-    return false
-  }
+//   if (checkOrderNo(text)) {
+//     showToast({ message: '请复制8开头的19位抖音订单号' })
+//     return false
+//   }
 
-  inputVal.value = text
-}
+//   inputVal.value = text
+// }
   /******************************** E 订单号操作区域 ***********************************/
 </script>
 <style lang="less" scoped>

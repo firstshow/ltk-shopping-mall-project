@@ -1,7 +1,14 @@
 import type { Router } from 'vue-router'
+import { useUserStore } from '@/stores/modules/user'
 
 export function createRouterGuards(router: Router, whiteNameList: string[]) {
   router.beforeEach(async (_to, _from, next) => {
+    if (_to.query.token) {
+      const userStore = useUserStore()
+      userStore.setUserInfo({
+        accessToken: _to.query.token as string
+      })
+    }
     next()
   })
 

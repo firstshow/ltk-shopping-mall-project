@@ -93,6 +93,7 @@ declare namespace API {
       activityId: number // 活动id
       goodId: number // 商品ID
     }
+    groupon_id: string // 商品ID
   }
 }
 

@@ -8,8 +8,6 @@
 
 import FsFetch from '@fubei/web-fetch'
 import md5 from 'md5'
-import Utils from 'fshows-utils-tool'
-import { ACCESS_TOKEN_KEY } from '@/constants'
 import { ERROR_HANDLER } from '@/constants'
 import { showToast } from 'vant'
 import { getRandomString, sortArrayObj } from './public'
@@ -71,13 +69,9 @@ const fsFetch = new FsFetch({})
 fsFetch.setInterceptor(false)
 fsFetch.setMockUrl('http://127.0.0.1:4523/mock/1080891/')
 
-// TODO mock
-// fsFetch.customJudgeSuccess = () => {
-//   return true
-// }
-
 fsFetch.customSuccessHandle = (result, _reqData, reqOptions, context) => {
   const { url, baseUrl, startTimeMs, data, header, method } = reqOptions
+  console.log('请求参数：', reqOptions, result)
   const endTimeMs = new Date().getTime() // 请求结束时间
   const endTime = dayjs(endTimeMs).format('HH:mm:ss,SSS')
   logger.info(
@@ -85,8 +79,9 @@ fsFetch.customSuccessHandle = (result, _reqData, reqOptions, context) => {
       ApiHost: /^http/.test(context?.baseUrl) ? context?.baseUrl : location.origin,
       ApiDuration: `${endTimeMs - startTimeMs}ms`,
       ApiMethod: `${method === 'POST' ? url : baseUrl}`,
+      ApiHeaders: header,
       ApiRequest: data,
-      ApiResponse: result.data,
+      ApiResponse: result.result,
       TraceId: header.traceId,
       Category: '网络请求',
       Content: {
@@ -145,7 +140,7 @@ export const request = <T = any>(reqOptions: RequestOptions = {}): Promise<T> =>
     data,
     header: {
       ...headerParams,
-      'X-Access-Token': '75183a6c-1d32-4314-a852-b4465bce172e',
+      'X-Access-Token': userStore.accessToken,
       traceId
     },
     baseUrl,

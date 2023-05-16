@@ -25,7 +25,7 @@
           class="x-list"
           v-model="data.loading"
           :finished="data.finished"
-          finished-text="没有更多了"
+          finished-text="- 我是有底线的呦 -"
           @load="onGoodsListLoad"
         >
           <product-item
@@ -69,13 +69,14 @@
     getCategoryListServer,
     getGoodsListServer,
     enterLiveRoomServer,
-    receivePrizeServer
+    receivePrizeServer,
+    getUserInfoServer
   } from '@/api'
-  import { useUserStore } from '@/stores/modules/user'
   import { showLoadingToast, closeToast, showToast, showDialog } from 'vant'
   import { getMobilePlatform } from '@/utils/device'
-
+  import { useUserStore } from '@/stores/modules/user'
   const userStore = useUserStore()
+
   defineOptions({
     name: 'Home'
   })
@@ -176,6 +177,12 @@
     * @param id 商品ID
     */
    const enterLiveRoom = async (liveRoomInfo: any, liveRoomUrl: string) => {
+    showLoadingToast({
+      message: '加载中...',
+      forbidClick: true,
+      duration: 500
+    })
+
     let url = getLiveRoomUrlByPlatform(liveRoomUrl)
     console.log('|||{{{}}}}}}', url)
     try {
@@ -183,9 +190,11 @@
       let resData = await enterLiveRoomServer({
         id
       })
+      closeToast()
+      setTimeout(() => jumpToLiveRoom(url), 200);
       console.log('获取直播间参数成功：', resData)
-      jumpToLiveRoom(url)
     } catch (error) {
+      closeToast()
       console.log('进入直播间失败：', error)
     }
    }
@@ -213,6 +222,29 @@
    }
 
   /******************************** E 商品相关业务逻辑 ***********************************/
+
+
+ /******************************** S 获取用户信息业务逻辑 ***********************************/
+ /**
+  * @function 获取用户信息
+  */
+const getUserInfo = async () => {
+  try {
+    let resData = await getUserInfoServer()
+      userStore.setUserInfo({
+        nickname: resData.result.nickname,
+        avatar: resData.result.avatar
+      })
+    console.log('获取直播间参数成功：', resData)
+  } catch (error) {
+    console.log('进入直播间失败：', error)
+  }
+}
+
+
+
+  /******************************** E 获取用户信息业务逻辑 ***********************************/
+
 
   /******************************** S 底部操作栏业务逻辑 ***********************************/
   const showReceivePopup = ref(false)
@@ -271,6 +303,7 @@
         orderNo: data.orderNo
       })
       closeToast()
+      jumpMy()
       console.log('申请领取奖励成功：', resData)
     } catch (error) {
       closeToast()
@@ -286,9 +319,7 @@
   onMounted(() => {
     console.log('ScenePage ~ onMounted')
     getCategoryListFn()
-    userStore.setUserInfo({
-      accessToken: '75183a6c-1d32-4314-a852-b4465bce172e'
-    })
+    getUserInfo()
   })
   /******************************** E 生命周期钩子函数业务逻辑 ***********************************/
 </script>
