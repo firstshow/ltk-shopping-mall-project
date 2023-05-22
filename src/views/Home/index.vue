@@ -64,7 +64,7 @@
   import ProductItem from '@/views/Home/components/ProductItem/index.vue'
   import ReceivePopup from '@/views/Home/components/ReceivePopup/index.vue'
   import { routeChange, checkOrderNo, getLiveRoomUrlByPlatform, setClipboardContent } from '@/hooks'
-  import { ROUTE_MAP, MOBILE_PLATFORM } from '@/constants'
+  import { ROUTE_MAP, MOBILE_PLATFORM, ACTION_TYPE } from '@/constants'
   import {
     getCategoryListServer,
     getGoodsListServer,
@@ -75,6 +75,9 @@
   import { showLoadingToast, closeToast, showToast, showDialog } from 'vant'
   import { getMobilePlatform } from '@/utils/device'
   import { useUserStore } from '@/stores/modules/user'
+  import { useRoute } from 'vue-router'
+
+  const router = useRoute();
   const userStore = useUserStore()
 
   defineOptions({
@@ -248,6 +251,14 @@ const getUserInfo = async () => {
 
   /******************************** S 底部操作栏业务逻辑 ***********************************/
   const showReceivePopup = ref(false)
+  /**
+   * @function 初始化领取弹框，如果链接后面有action=applyForRewards，则打开领取弹框
+   */
+  const initReceivePopup = () => {
+    if (router.query.action === ACTION_TYPE.ApplyForRewards) {
+      openReceivePopup()
+    }
+  }
 
   /**
    * @function 打开领取弹框
@@ -261,12 +272,6 @@ const getUserInfo = async () => {
   const closeReceivePopup = () => {
     showReceivePopup.value = false
   }
-  /**
-   * @function 微信公众号授权，获取头像、昵称等信息
-   */
-  // const auth = () => {
-  //   console.log('跳转进我的')
-  // }
   /**
    * @function 跳转至我的页面
    */
@@ -310,16 +315,14 @@ const getUserInfo = async () => {
       console.log('申请领取奖励失败：', error)
     }
    }
-
-
   /******************************** E 底部操作栏业务逻辑 ***********************************/
 
 
   /******************************** S 生命周期钩子函数业务逻辑 ***********************************/
   onMounted(() => {
-    console.log('ScenePage ~ onMounted')
     getCategoryListFn()
     getUserInfo()
+    initReceivePopup()
   })
   /******************************** E 生命周期钩子函数业务逻辑 ***********************************/
 </script>

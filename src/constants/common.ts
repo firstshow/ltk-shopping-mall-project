@@ -36,3 +36,10 @@ export const MOBILE_PLATFORM = {
   android: 'android',
   windows: 'windows'
 }
+
+/**
+ * @constant 路由带来的action
+ */
+export const ACTION_TYPE = {
+  ApplyForRewards: 'ApplyForRewards'
+}
