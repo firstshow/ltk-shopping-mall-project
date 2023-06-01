@@ -1,0 +1,45 @@
+.x-product-header {
+  position: relative;
+  text-align: center;
+  .x-indicator {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    padding: 2px 5px;
+    font-size: 12px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+
+.x-product-body {
+  padding: 12px 20px;
+  border-radius: 12px 12px 0 0;
+  background-color: @white;
+  transform: translateY(-10px);
+  .van-field {
+    border: 0.5px solid @ltk-border-color;
+    border-radius: 4px;
+    .van-button {
+      height: 28px;
+    }
+    &::after {
+      border: 0;
+    }
+  }
+  .x-receive-tips-box {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    background-color: @ltk-label-back-color;
+    border-radius: 4px;
+    .x-tips-text {
+      color: @ltk-label-text-color;
+      font-size: 12px;
+    }
+    .x-tips-img {
+      width: 100%;
+      margin-top: 8px;
+    }
+  }
+}

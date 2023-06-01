@@ -25,7 +25,7 @@
           class="x-list"
           v-model="data.loading"
           :finished="data.finished"
-          finished-text="- 我是有底线的呦 -"
+          finished-text=""
           @load="onGoodsListLoad"
         >
           <product-item
@@ -34,6 +34,10 @@
             :data="item"
             @onClick="enterLiveRoom(item, item.liveRoomUrl)"
           />
+          <div class="x-list-finished flex justify-center items-center" v-if="data.finished">
+          没有您心仪的商品？
+          <span class="x-search" @click="jumpSearch">搜索一下</span>
+        </div>
         </van-list>
         <!-- E 商品列表 -->
       </div>
@@ -55,6 +59,12 @@
       @onClick="applyReceivePrize"
     />
     <!-- E 领取奖励的弹框 -->
+
+    <!-- S 商品详情的弹框 -->
+    <product-detail
+      :show="showProductDetailPopup"
+    />
+    <!-- E 商品详情的弹框 -->
   </root-page>
 
 </template>
@@ -62,6 +72,7 @@
 <script setup lang="ts">
   import ShoppingTips from '@/views/Home/components/ShoppingTips/index.vue'
   import ProductItem from '@/views/Home/components/ProductItem/index.vue'
+  import ProductDetail from '@/views/Home/components/ProductDetail/index.vue'
   import ReceivePopup from '@/views/Home/components/ReceivePopup/index.vue'
   import { routeChange, checkOrderNo, getLiveRoomUrlByPlatform, setClipboardContent } from '@/hooks'
   import { ROUTE_MAP, MOBILE_PLATFORM, ACTION_TYPE } from '@/constants'
@@ -224,6 +235,13 @@
     }
    }
 
+  /**
+   * @function 跳转至我的页面
+   */
+   const jumpSearch = () => {
+    console.log('跳转进我的')
+    routeChange(ROUTE_MAP.search)
+  }
   /******************************** E 商品相关业务逻辑 ***********************************/
 
 
@@ -248,6 +266,26 @@ const getUserInfo = async () => {
 
   /******************************** E 获取用户信息业务逻辑 ***********************************/
 
+  /******************************** S 商品详情弹框业务逻辑 ***********************************/
+  const showProductDetailPopup = ref(true)
+ /**
+  * @function 获取用户信息
+  */
+//   const getProductDetail = async () => {
+//   try {
+//     let resData = await getProductDetailServer()
+//       userStore.setUserInfo({
+//         nickname: resData.result.nickname,
+//         avatar: resData.result.avatar
+//       })
+//     console.log('获取直播间参数成功：', resData)
+//   } catch (error) {
+//     console.log('进入直播间失败：', error)
+//   }
+// }
+
+
+  /******************************** E 商品详情弹框业务逻辑 ***********************************/
 
   /******************************** S 底部操作栏业务逻辑 ***********************************/
   const showReceivePopup = ref(false)
