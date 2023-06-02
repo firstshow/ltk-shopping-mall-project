@@ -8,8 +8,8 @@
     <div class="x-product-outside-box">
       <div class="x-inside-box">
         <!-- S 商品类目筛选 -->
-        <div class="x-category-selection flex">
-          <ul class="flex flex-nowrap">
+        <div class="x-category-selection flex items-center">
+          <ul class="x-category-list flex flex-nowrap">
             <li
             :class="['x-category-item', selectedCategoryName === item ? 'x-item-selected' : '']"
             v-for="item in data.categoryList"
@@ -17,6 +17,9 @@
             @click="selectCategoryFn(item)"
           >{{ item }}</li>
           </ul>
+        </div>
+        <div class="x-search-box flex justify-center items-center" @click="jumpSearch">
+          <svg-icon name="IconSearch" size="28" />
         </div>
          <!-- E 商品类目筛选 -->
 
@@ -69,8 +72,8 @@
       :productSoldCount="data.currentProductSoldCount"
       :poiAddress="data.currentPoiAddress"
       :commissionAmount="data.currentCommissionAmount"
+      :productInfo="data.currentProductInfo"
       @close="closeProductDetailPopup"
-      @enterLiveRoom="enterLiveRoom"
     />
     <!-- E 商品详情的弹框 -->
   </root-page>
@@ -81,17 +84,15 @@
   import ProductItem from '@/views/Home/components/ProductItem/index.vue'
   import ProductDetail from '@/views/Home/components/ProductDetail/index.vue'
   import ReceivePopup from '@/views/Home/components/ReceivePopup/index.vue'
-  import { routeChange, checkOrderNo, getLiveRoomUrlByPlatform, setClipboardContent } from '@/hooks'
-  import { ROUTE_MAP, MOBILE_PLATFORM, ACTION_TYPE } from '@/constants'
+  import { routeChange, checkOrderNo } from '@/hooks'
+  import { ROUTE_MAP, ACTION_TYPE } from '@/constants'
   import {
     getCategoryListServer,
     getGoodsListServer,
-    enterLiveRoomServer,
     receivePrizeServer,
     getUserInfoServer
   } from '@/api'
-  import { showLoadingToast, closeToast, showToast, showDialog } from 'vant'
-  import { getMobilePlatform } from '@/utils/device'
+  import { showLoadingToast, closeToast, showToast } from 'vant'
   import { useUserStore } from '@/stores/modules/user'
   import { useRoute } from 'vue-router'
 
@@ -116,7 +117,7 @@
     finished: false, // 是否加载完成
     total: 0, // 总共商品数据条数
     orderNo: '', // 返利订单号
-    currentLiveRoomInfo: {} as API.GoodsCartList, // 当前查看详情的直播间信息
+    currentProductInfo: {} as API.GoodsCartList, // 当前查看详情的直播间信息
     currentProductId: '', // 当前展示详情的商品ID
     currentProductName: '', // 当前展示详情的商品名称
     currentProductSoldCount: '0', // 当前展示详情的商品销量
@@ -200,55 +201,6 @@
    }
 
    /**
-    * @function 进入直播间，直播间商品切换成当前商品
-    * @param id 商品ID
-    */
-   const enterLiveRoom = async () => {
-    showLoadingToast({
-      message: '加载中...',
-      forbidClick: true,
-      duration: 500
-    })
-
-    let url = getLiveRoomUrlByPlatform(data.currentLiveRoomInfo.liveRoomUrl)
-    console.log('|||{{{}}}}}}', url)
-    try {
-      let id = data.currentLiveRoomInfo.id
-      let resData = await enterLiveRoomServer({
-        id
-      })
-      closeToast()
-      setTimeout(() => jumpToLiveRoom(url), 200);
-      console.log('获取直播间参数成功：', resData)
-    } catch (error) {
-      closeToast()
-      console.log('进入直播间失败：', error)
-    }
-   }
-
-   /**
-    * @function 跳转到直播间，这边安卓和IOS处理不一样
-    * @param url 直播间地址
-    */
-   const jumpToLiveRoom = async (url: string) => {
-    switch (getMobilePlatform()) {
-      case MOBILE_PLATFORM.android:
-        await setClipboardContent(url)
-        showDialog({
-          title: '复制成功',
-          message: '请打开抖音APP，出现直播间弹框提示后，进入直播间下单',
-        })
-        break
-      case MOBILE_PLATFORM.ios:
-      case MOBILE_PLATFORM.windows:
-        window.location.href = url
-        break
-      default:
-        console.error('不属于任何一个平台')
-    }
-   }
-
-  /**
    * @function 跳转至我的页面
    */
    const jumpSearch = () => {
@@ -259,24 +211,21 @@
 
 
  /******************************** S 获取用户信息业务逻辑 ***********************************/
- /**
-  * @function 获取用户信息
-  */
-const getUserInfo = async () => {
-  try {
-    let resData = await getUserInfoServer()
-      userStore.setUserInfo({
-        nickname: resData.result.nickname,
-        avatar: resData.result.avatar
-      })
-    console.log('获取直播间参数成功：', resData)
-  } catch (error) {
-    console.log('进入直播间失败：', error)
+  /**
+    * @function 获取用户信息
+    */
+  const getUserInfo = async () => {
+    try {
+      let resData = await getUserInfoServer()
+        userStore.setUserInfo({
+          nickname: resData.result.nickname,
+          avatar: resData.result.avatar
+        })
+      console.log('获取直播间参数成功：', resData)
+    } catch (error) {
+      console.log('进入直播间失败：', error)
+    }
   }
-}
-
-
-
   /******************************** E 获取用户信息业务逻辑 ***********************************/
 
   /******************************** S 商品详情弹框业务逻辑 ***********************************/
@@ -295,14 +244,9 @@ const getUserInfo = async () => {
    * @param liveRoomInfo 直播间信息
    * @param liveRoomUrl
    */
-  const openProductDetailPopup = async (liveRoomInfo: any) => {
-     console.log('||||', liveRoomInfo)
-     data.currentLiveRoomInfo = liveRoomInfo
-     data.currentProductId = liveRoomInfo.componentId
-     data.currentProductName = liveRoomInfo.cardData.source
-     data.currentPoiAddress = liveRoomInfo.poiAddress
-     data.currentProductSoldCount = liveRoomInfo.cardData.sold_count
-     data.currentCommissionAmount = liveRoomInfo.commissionAmount
+  const openProductDetailPopup = async (productInfo: any) => {
+     console.log('||||', productInfo)
+     data.currentProductInfo = productInfo
      nextTick(async () => {
       await productDetailRef.value.getProductDetail()
       showProductDetailPopup.value = true

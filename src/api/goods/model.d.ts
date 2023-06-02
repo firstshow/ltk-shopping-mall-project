@@ -11,6 +11,14 @@ declare namespace API {
     timestamp: number
   }
 
+  type SearchGoodsListParams = {
+    category?: string // 用户名
+    keyword?: string // 搜索的关键字
+    pageNo?: number // 第几页
+    pageSize?: number // 一页多少条
+    sortType?: string // 排序类型
+  }
+
   /**
    * @type 获取商品列表请求参数
    */
@@ -47,6 +55,16 @@ declare namespace API {
     name: string // 商品名称
     price: number // 商品价格
   }
+
+    /**
+   * @type 搜索的商品信息
+   */
+    type SearchGoodsList = {
+      card_list: GoodsInfo[] // 列表数据
+      pages: number // 当前第几页
+      size: number // 单页长度
+      total: number // 列表总数
+    }
 
   /**
    * @type 商品信息

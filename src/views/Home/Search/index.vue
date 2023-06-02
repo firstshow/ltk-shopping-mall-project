@@ -1,6 +1,6 @@
 <template>
   <root-page class="home-page">
-    <van-search placeholder="请输入搜索关键词" v-model="data.searchVal" />
+    <van-search placeholder="请输入搜索关键词" v-model="data.searchVal" @search="searchGoodsList" />
 
     <!-- S 直播间商品列表 -->
     <div class="x-product-outside-box">
@@ -16,7 +16,7 @@
           <product-item
             v-for="(item, index) in data.goodsList"
             :key="index"
-            :data="item.list[0]"
+            :data="item"
             @onClick="enterLiveRoom(item, item.liveRoomUrl)"
           />
         </van-list>
@@ -29,19 +29,17 @@
 
 <script setup lang="ts">
   import ProductItem from '@/views/Home/components/ProductItem/index.vue'
-  import { routeChange, checkOrderNo, getLiveRoomUrlByPlatform, setClipboardContent } from '@/hooks'
-  import { ROUTE_MAP, MOBILE_PLATFORM, ACTION_TYPE } from '@/constants'
+  import { getLiveRoomUrlByPlatform, setClipboardContent } from '@/hooks'
+  import { MOBILE_PLATFORM } from '@/constants'
   import {
-    getGoodsListServer,
+    searchGoodsListServer,
     enterLiveRoomServer,
     getUserInfoServer
   } from '@/api'
   import { showLoadingToast, closeToast, showToast, showDialog } from 'vant'
   import { getMobilePlatform } from '@/utils/device'
   import { useUserStore } from '@/stores/modules/user'
-  import { useRoute } from 'vue-router'
 
-  const router = useRoute();
   const userStore = useUserStore()
 
   defineOptions({
@@ -52,292 +50,13 @@
     searchVal: '', // 搜索的值
     isShowDialog: true,
     categoryList: [] as string[], // 类目列表
-    goodsList: [
-      {
-        shopInfo: '11111', // 商品id
-        list: [
-          {
-            anchorName: '111', // 商品id
-            cardData: {
-              actual_amount: 'string,', // 实际支付价格
-              actual_amount_num: 111, // 实际支付价格
-              source: 'string', // 商品名称
-              origin_amount: 'string', // 原价
-              sold_count: 212, // 已售数量
-              image_info: [
-                {
-                  width: 100, // 图片宽度
-                  height: 100, // 图片高度
-                  web_uri: 'string,', // 图片的uri
-                  web_url: '"https://p6-sign.douyinpic.com/obj/tos-cn-i-hf2m9xxmck/4aa5e473217d43fbb360ebd2483533d8?x-expires=1685520000&x-signature=PPXEYMxCnxVukO5m6KZfmcs3VBU%3D&from=521828180&se=false&biz_tag=life_commerce_pack&l=20230531100406E1F7B96BB1FEB437DA8B"' // 图片url
-                }
-              ],
-              execution_plan: {
-                activityId: 11222, // 活动id
-                goodId: 11222, // 商品ID
-              },
-              groupon_id: 'string' // 商品ID
-            }, // 列表数据
-            category: '21212', // 类目
-            commissionAmount: 123, // 佣金
-            commissionRate: 0.5, // 返佣率
-            poiAddress: '21212', // 门店地址
-            sortNo: 1 // 商品排名
-          }
-        ],
-        liveRoomId: 2221212121, // 直播间ID
-        liveRoomUrl: '12212112' // 直播间链接
-      },
-      {
-        shopInfo: '11111', // 商品id
-        list: [
-          {
-            anchorName: '111', // 商品id
-            cardData: {
-              actual_amount: 'string,', // 实际支付价格
-              actual_amount_num: 111, // 实际支付价格
-              source: 'string', // 商品名称
-              origin_amount: 'string', // 原价
-              sold_count: 212, // 已售数量
-              image_info: [
-                {
-                  width: 100, // 图片宽度
-                  height: 100, // 图片高度
-                  web_uri: 'string,', // 图片的uri
-                  web_url: '"https://p6-sign.douyinpic.com/obj/tos-cn-i-hf2m9xxmck/4aa5e473217d43fbb360ebd2483533d8?x-expires=1685520000&x-signature=PPXEYMxCnxVukO5m6KZfmcs3VBU%3D&from=521828180&se=false&biz_tag=life_commerce_pack&l=20230531100406E1F7B96BB1FEB437DA8B"' // 图片url
-                }
-              ],
-              execution_plan: {
-                activityId: 11222, // 活动id
-                goodId: 11222, // 商品ID
-              },
-              groupon_id: 'string' // 商品ID
-            }, // 列表数据
-            category: '21212', // 类目
-            commissionAmount: 123, // 佣金
-            commissionRate: 0.5, // 返佣率
-            poiAddress: '21212', // 门店地址
-            sortNo: 1 // 商品排名
-          }
-        ],
-        liveRoomId: 2221212121, // 直播间ID
-        liveRoomUrl: '12212112' // 直播间链接
-      },
-      {
-        shopInfo: '11111', // 商品id
-        list: [
-          {
-            anchorName: '111', // 商品id
-            cardData: {
-              actual_amount: 'string,', // 实际支付价格
-              actual_amount_num: 111, // 实际支付价格
-              source: 'string', // 商品名称
-              origin_amount: 'string', // 原价
-              sold_count: 212, // 已售数量
-              image_info: [
-                {
-                  width: 100, // 图片宽度
-                  height: 100, // 图片高度
-                  web_uri: 'string,', // 图片的uri
-                  web_url: '"https://p6-sign.douyinpic.com/obj/tos-cn-i-hf2m9xxmck/4aa5e473217d43fbb360ebd2483533d8?x-expires=1685520000&x-signature=PPXEYMxCnxVukO5m6KZfmcs3VBU%3D&from=521828180&se=false&biz_tag=life_commerce_pack&l=20230531100406E1F7B96BB1FEB437DA8B"' // 图片url
-                }
-              ],
-              execution_plan: {
-                activityId: 11222, // 活动id
-                goodId: 11222, // 商品ID
-              },
-              groupon_id: 'string' // 商品ID
-            }, // 列表数据
-            category: '21212', // 类目
-            commissionAmount: 123, // 佣金
-            commissionRate: 0.5, // 返佣率
-            poiAddress: '21212', // 门店地址
-            sortNo: 1 // 商品排名
-          }
-        ],
-        liveRoomId: 2221212121, // 直播间ID
-        liveRoomUrl: '12212112' // 直播间链接
-      },
-      {
-        shopInfo: '11111', // 商品id
-        list: [
-          {
-            anchorName: '111', // 商品id
-            cardData: {
-              actual_amount: 'string,', // 实际支付价格
-              actual_amount_num: 111, // 实际支付价格
-              source: 'string', // 商品名称
-              origin_amount: 'string', // 原价
-              sold_count: 212, // 已售数量
-              image_info: [
-                {
-                  width: 100, // 图片宽度
-                  height: 100, // 图片高度
-                  web_uri: 'string,', // 图片的uri
-                  web_url: '"https://p6-sign.douyinpic.com/obj/tos-cn-i-hf2m9xxmck/4aa5e473217d43fbb360ebd2483533d8?x-expires=1685520000&x-signature=PPXEYMxCnxVukO5m6KZfmcs3VBU%3D&from=521828180&se=false&biz_tag=life_commerce_pack&l=20230531100406E1F7B96BB1FEB437DA8B"' // 图片url
-                }
-              ],
-              execution_plan: {
-                activityId: 11222, // 活动id
-                goodId: 11222, // 商品ID
-              },
-              groupon_id: 'string' // 商品ID
-            }, // 列表数据
-            category: '21212', // 类目
-            commissionAmount: 123, // 佣金
-            commissionRate: 0.5, // 返佣率
-            poiAddress: '21212', // 门店地址
-            sortNo: 1 // 商品排名
-          }
-        ],
-        liveRoomId: 2221212121, // 直播间ID
-        liveRoomUrl: '12212112' // 直播间链接
-      },
-      {
-        shopInfo: '11111', // 商品id
-        list: [
-          {
-            anchorName: '111', // 商品id
-            cardData: {
-              actual_amount: 'string,', // 实际支付价格
-              actual_amount_num: 111, // 实际支付价格
-              source: 'string', // 商品名称
-              origin_amount: 'string', // 原价
-              sold_count: 212, // 已售数量
-              image_info: [
-                {
-                  width: 100, // 图片宽度
-                  height: 100, // 图片高度
-                  web_uri: 'string,', // 图片的uri
-                  web_url: '"https://p6-sign.douyinpic.com/obj/tos-cn-i-hf2m9xxmck/4aa5e473217d43fbb360ebd2483533d8?x-expires=1685520000&x-signature=PPXEYMxCnxVukO5m6KZfmcs3VBU%3D&from=521828180&se=false&biz_tag=life_commerce_pack&l=20230531100406E1F7B96BB1FEB437DA8B"' // 图片url
-                }
-              ],
-              execution_plan: {
-                activityId: 11222, // 活动id
-                goodId: 11222, // 商品ID
-              },
-              groupon_id: 'string' // 商品ID
-            }, // 列表数据
-            category: '21212', // 类目
-            commissionAmount: 123, // 佣金
-            commissionRate: 0.5, // 返佣率
-            poiAddress: '21212', // 门店地址
-            sortNo: 1 // 商品排名
-          }
-        ],
-        liveRoomId: 2221212121, // 直播间ID
-        liveRoomUrl: '12212112' // 直播间链接
-      },
-      {
-        shopInfo: '11111', // 商品id
-        list: [
-          {
-            anchorName: '111', // 商品id
-            cardData: {
-              actual_amount: 'string,', // 实际支付价格
-              actual_amount_num: 111, // 实际支付价格
-              source: 'string', // 商品名称
-              origin_amount: 'string', // 原价
-              sold_count: 212, // 已售数量
-              image_info: [
-                {
-                  width: 100, // 图片宽度
-                  height: 100, // 图片高度
-                  web_uri: 'string,', // 图片的uri
-                  web_url: '"https://p6-sign.douyinpic.com/obj/tos-cn-i-hf2m9xxmck/4aa5e473217d43fbb360ebd2483533d8?x-expires=1685520000&x-signature=PPXEYMxCnxVukO5m6KZfmcs3VBU%3D&from=521828180&se=false&biz_tag=life_commerce_pack&l=20230531100406E1F7B96BB1FEB437DA8B"' // 图片url
-                }
-              ],
-              execution_plan: {
-                activityId: 11222, // 活动id
-                goodId: 11222, // 商品ID
-              },
-              groupon_id: 'string' // 商品ID
-            }, // 列表数据
-            category: '21212', // 类目
-            commissionAmount: 123, // 佣金
-            commissionRate: 0.5, // 返佣率
-            poiAddress: '21212', // 门店地址
-            sortNo: 1 // 商品排名
-          }
-        ],
-        liveRoomId: 2221212121, // 直播间ID
-        liveRoomUrl: '12212112' // 直播间链接
-      },
-      {
-        shopInfo: '11111', // 商品id
-        list: [
-          {
-            anchorName: '111', // 商品id
-            cardData: {
-              actual_amount: 'string,', // 实际支付价格
-              actual_amount_num: 111, // 实际支付价格
-              source: 'string', // 商品名称
-              origin_amount: 'string', // 原价
-              sold_count: 212, // 已售数量
-              image_info: [
-                {
-                  width: 100, // 图片宽度
-                  height: 100, // 图片高度
-                  web_uri: 'string,', // 图片的uri
-                  web_url: '"https://p6-sign.douyinpic.com/obj/tos-cn-i-hf2m9xxmck/4aa5e473217d43fbb360ebd2483533d8?x-expires=1685520000&x-signature=PPXEYMxCnxVukO5m6KZfmcs3VBU%3D&from=521828180&se=false&biz_tag=life_commerce_pack&l=20230531100406E1F7B96BB1FEB437DA8B"' // 图片url
-                }
-              ],
-              execution_plan: {
-                activityId: 11222, // 活动id
-                goodId: 11222, // 商品ID
-              },
-              groupon_id: 'string' // 商品ID
-            }, // 列表数据
-            category: '21212', // 类目
-            commissionAmount: 123, // 佣金
-            commissionRate: 0.5, // 返佣率
-            poiAddress: '21212', // 门店地址
-            sortNo: 1 // 商品排名
-          }
-        ],
-        liveRoomId: 2221212121, // 直播间ID
-        liveRoomUrl: '12212112' // 直播间链接
-      },{
-        shopInfo: '11111', // 商品id
-        list: [
-          {
-            anchorName: '111', // 商品id
-            cardData: {
-              actual_amount: 'string,', // 实际支付价格
-              actual_amount_num: 111, // 实际支付价格
-              source: 'string', // 商品名称
-              origin_amount: 'string', // 原价
-              sold_count: 212, // 已售数量
-              image_info: [
-                {
-                  width: 100, // 图片宽度
-                  height: 100, // 图片高度
-                  web_uri: 'string,', // 图片的uri
-                  web_url: '"https://p6-sign.douyinpic.com/obj/tos-cn-i-hf2m9xxmck/4aa5e473217d43fbb360ebd2483533d8?x-expires=1685520000&x-signature=PPXEYMxCnxVukO5m6KZfmcs3VBU%3D&from=521828180&se=false&biz_tag=life_commerce_pack&l=20230531100406E1F7B96BB1FEB437DA8B"' // 图片url
-                }
-              ],
-              execution_plan: {
-                activityId: 11222, // 活动id
-                goodId: 11222, // 商品ID
-              },
-              groupon_id: 'string' // 商品ID
-            }, // 列表数据
-            category: '21212', // 类目
-            commissionAmount: 123, // 佣金
-            commissionRate: 0.5, // 返佣率
-            poiAddress: '21212', // 门店地址
-            sortNo: 1 // 商品排名
-          }
-        ],
-        liveRoomId: 2221212121, // 直播间ID
-        liveRoomUrl: '12212112' // 直播间链接
-      }
-    ] as API.GoodsInfo[], // 商品列表
+    goodsList: [] as API.GoodsInfo[], // 商品列表
     goodsListQueryParams: {
       category: '',
       keyword: '',
       pageNo: 1, // 当前第几页
-      pageSize: 10 // 一页几条，默认10条
+      pageSize: 10, // 一页几条，默认10条
+      sortType: '1' // 排序方式
     },
     loading: false, // 是在加载中
     finished: false, // 是否加载完成
@@ -349,7 +68,7 @@
   /**
    * @function 获取商品列表
    */
-   const getGoodsList = async () => {
+   const searchGoodsList = async () => {
     try {
       showLoadingToast({
         message: '加载中...',
@@ -358,22 +77,28 @@
       })
 
       let { keyword, pageNo, pageSize } = data.goodsListQueryParams
-      let resData = await getGoodsListServer({
+      let resData = await searchGoodsListServer({
         category: '',
         keyword,
         pageNo,
         pageSize,
       })
-      if (data.goodsListQueryParams.pageNo === 1) {
-        data.goodsList = resData.result.records
-      } else {
-        data.goodsList = data.goodsList.concat(resData.result.records)
+      let goodsList = []
+      for (let i = 0; i < resData.result.card_list.length; i++) {
+        goodsList.push(JSON.parse(resData.result?.card_list[i]?.card_data))
       }
-      console.log('当前的商品列表：', data.total, data.goodsList.length, data.goodsListQueryParams.pageNo, data.goodsList)
+
+      console.log('当前的商品列表：', goodsList)
+      if (data.goodsListQueryParams.pageNo === 1) {
+        data.goodsList = goodsList
+      } else {
+        data.goodsList = data.goodsList.concat(goodsList)
+      }
+      console.log('当前的商品列表：', data.goodsList)
       data.loading = false
-      data.total = resData.result.total
+      // data.total = resData.result.total
       data.goodsListQueryParams.pageNo++
-      data.finished = data.goodsList.length >= data.total
+      data.finished = data.goodsList.length < data.goodsListQueryParams.pageSize
       closeToast()
     } catch (error) {
       data.loading = false
@@ -390,7 +115,7 @@
       return
     }
     data.loading = true
-    getGoodsList()
+    searchGoodsList()
    }
 
    /**

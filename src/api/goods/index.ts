@@ -17,6 +17,17 @@ export function getCategoryListServer() {
 /**
  * @api 获取商品列表
  */
+export function searchGoodsListServer(data: API.SearchGoodsListParams) {
+  return request<API.resResult<API.SearchGoodsList>>({
+    url: '/api/ltk/ltkLiveGoods-api/searchPage',
+    data,
+    method: 'GET'
+  })
+}
+
+/**
+ * @api 获取商品列表
+ */
 export function getGoodsListServer(data: API.GoodsListParams) {
   return request<API.resResult<API.GoodsList>>({
     url: '/api/ltk/ltkLiveGoods-api/page',
