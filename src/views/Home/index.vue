@@ -32,7 +32,7 @@
             v-for="(item, index) in data.goodsList"
             :key="index"
             :data="item"
-            @onClick="enterLiveRoom(item, item.liveRoomUrl)"
+            @onClick="openProductDetailPopup(item)"
           />
           <div class="x-list-finished flex justify-center items-center" v-if="data.finished">
           没有您心仪的商品？
@@ -62,11 +62,18 @@
 
     <!-- S 商品详情的弹框 -->
     <product-detail
+      ref="productDetailRef"
       :show="showProductDetailPopup"
+      :componentId="data.currentProductId"
+      :productName="data.currentProductName"
+      :productSoldCount="data.currentProductSoldCount"
+      :poiAddress="data.currentPoiAddress"
+      :commissionAmount="data.currentCommissionAmount"
+      @close="closeProductDetailPopup"
+      @enterLiveRoom="enterLiveRoom"
     />
     <!-- E 商品详情的弹框 -->
   </root-page>
-
 </template>
 
 <script setup lang="ts">
@@ -108,7 +115,13 @@
     loading: false, // 是在加载中
     finished: false, // 是否加载完成
     total: 0, // 总共商品数据条数
-    orderNo: '' // 返利订单号
+    orderNo: '', // 返利订单号
+    currentLiveRoomInfo: {} as API.GoodsCartList, // 当前查看详情的直播间信息
+    currentProductId: '', // 当前展示详情的商品ID
+    currentProductName: '', // 当前展示详情的商品名称
+    currentProductSoldCount: '0', // 当前展示详情的商品销量
+    currentPoiAddress: '', // 当前展示详情的POI地址
+    currentCommissionAmount: '' // 当前展示详情的返利金额
   })
 
   /******************************** S 类目相关业务逻辑 ***********************************/
@@ -190,17 +203,17 @@
     * @function 进入直播间，直播间商品切换成当前商品
     * @param id 商品ID
     */
-   const enterLiveRoom = async (liveRoomInfo: any, liveRoomUrl: string) => {
+   const enterLiveRoom = async () => {
     showLoadingToast({
       message: '加载中...',
       forbidClick: true,
       duration: 500
     })
 
-    let url = getLiveRoomUrlByPlatform(liveRoomUrl)
+    let url = getLiveRoomUrlByPlatform(data.currentLiveRoomInfo.liveRoomUrl)
     console.log('|||{{{}}}}}}', url)
     try {
-      let id = liveRoomInfo.id
+      let id = data.currentLiveRoomInfo.id
       let resData = await enterLiveRoomServer({
         id
       })
@@ -267,24 +280,34 @@ const getUserInfo = async () => {
   /******************************** E 获取用户信息业务逻辑 ***********************************/
 
   /******************************** S 商品详情弹框业务逻辑 ***********************************/
-  const showProductDetailPopup = ref(true)
- /**
-  * @function 获取用户信息
-  */
-//   const getProductDetail = async () => {
-//   try {
-//     let resData = await getProductDetailServer()
-//       userStore.setUserInfo({
-//         nickname: resData.result.nickname,
-//         avatar: resData.result.avatar
-//       })
-//     console.log('获取直播间参数成功：', resData)
-//   } catch (error) {
-//     console.log('进入直播间失败：', error)
-//   }
-// }
+  const productDetailRef = ref();
+  const showProductDetailPopup = ref(false)
 
+  /**
+   * @function 关闭商品详情弹框
+   */
+  const closeProductDetailPopup = () => {
+    showProductDetailPopup.value = false
+  }
 
+  /**
+   * @function 打开商品详情弹框
+   * @param liveRoomInfo 直播间信息
+   * @param liveRoomUrl
+   */
+  const openProductDetailPopup = async (liveRoomInfo: any) => {
+     console.log('||||', liveRoomInfo)
+     data.currentLiveRoomInfo = liveRoomInfo
+     data.currentProductId = liveRoomInfo.componentId
+     data.currentProductName = liveRoomInfo.cardData.source
+     data.currentPoiAddress = liveRoomInfo.poiAddress
+     data.currentProductSoldCount = liveRoomInfo.cardData.sold_count
+     data.currentCommissionAmount = liveRoomInfo.commissionAmount
+     nextTick(async () => {
+      await productDetailRef.value.getProductDetail()
+      showProductDetailPopup.value = true
+     })
+  }
   /******************************** E 商品详情弹框业务逻辑 ***********************************/
 
   /******************************** S 底部操作栏业务逻辑 ***********************************/

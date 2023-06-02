@@ -20,6 +20,13 @@ declare namespace API {
     pageNo?: number // 第几页
     pageSize?: number // 一页多少条
   }
+
+  /**
+   * @type 获取商品详情请求参数
+   */
+  type GoodsDetailParams = {
+    componentId: string // 商品Id
+  }
   /**
    * @type 进入直播间请求参数
    */
@@ -52,6 +59,22 @@ declare namespace API {
   }
 
   /**
+   * @type 商品详情返参
+   */
+   type GoodDetails = {
+    ProductSerializationData: string // 列表数据
+  }
+
+  /**
+   * @type 商品详情页面用
+   */
+  type GoodInfo = {
+    layout: any // 列表数据
+    nodes: any
+    pageInfo: any
+  }
+
+  /**
    * @type 商品信息
    */
   type GoodsInfo = {
@@ -66,13 +89,15 @@ declare namespace API {
    * @type 商品信息
    */
   type GoodsCartList = {
-    anchorName: string // 商品id
+    id: string; // 商品id
+    anchorName: string // 主播名称
     cardData: GoodsCartData // 列表数据
     category: string // 类目
     commissionAmount: number // 佣金
     commissionRate: number // 返佣率
     poiAddress: string // 门店地址
     sortNo: number // 商品排名
+    liveRoomUrl: string // 直播间链接
   }
   /**
    * @type 商品信息

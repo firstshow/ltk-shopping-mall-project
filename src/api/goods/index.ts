@@ -26,6 +26,17 @@ export function getGoodsListServer(data: API.GoodsListParams) {
 }
 
 /**
+ * @api 获取商品详情
+ */
+export function getGoodsDetailServer(data: API.GoodsDetailParams) {
+  return request<API.resResult<API.GoodDetails>>({
+    url: '/api/ltk/ltkLiveGoods-api/goodsInfo',
+    data,
+    method: 'GET'
+  })
+}
+
+/**
  * @api 进入直播间接口，进入直播间后，将讲解的商品展示为当前的商品
  */
 export function enterLiveRoomServer(data: API.EnterLiveRoomParams) {
