@@ -19,32 +19,32 @@
           <div class="x-price-box">
             <label>
               <span class="x-price-symbol">￥</span>
-              <span class="x-sale-price">{{ data.productInfo.nodes?.mainInfoGroup.data.skuPriceInfo.SkuPostCouponPrice / 100 }}</span>
+              <span class="x-sale-price">{{ data.productInfo.nodes?.mainInfoGroup.data.sku.actual_amount / 100 }}</span>
             </label>
-            <span class="x-original-price">￥{{data.productInfo.nodes?.mainInfoGroup.data.skuPriceInfo.SkuOriginPrice / 100 }}</span>
+            <span class="x-original-price">￥{{data.productInfo.nodes?.mainInfoGroup.data.sku.origin_amount / 100 }}</span>
           </div>
           <div class="x-sales-count">
-            <span>已售 {{ props.productInfo.cardData.sold_count }} 份</span>
+            <span>已售 {{ props.productInfo.card_data.sold_count }} 份</span>
           </div>
         </div>
         <!-- E 商品价格展示区域 -->
 
         <!-- S 门店信息 -->
         <div class="x-info-box x-title-box">
-          <h3 class="x-title">{{ props.productInfo.cardData.source }}</h3>
+          <h3 class="x-title">{{ props.productInfo.card_data.source }}</h3>
           <p class="x-service">
             <span class="x-sub-title">服务</span>
             <span>随时退·过期退·全网最低价</span>
           </p>
           <p class="x-address">
             <span class="x-sub-title">门店</span>
-            <span>{{ props.productInfo.poiAddress }}</span>
+            <span>{{ props.productInfo.card_data.poi.shop_info }}</span>
           </p>
         </div>
         <!-- E 门店信息 -->
 
         <!-- S 套餐详情信息 -->
-        <div class="x-info-box x-detail-box">
+        <div class="x-info-box x-detail-box" v-if="data.productInfo.nodes?.grouponDetail.data.itemGroups?.length">
           <h3 class="x-title">团购详情</h3>
           <label
             class="x-detail-group-box"
@@ -113,12 +113,12 @@
           <label>
             <label>
               <span class="x-price-symbol">￥</span>
-              <span class="x-sale-price">{{ data.productInfo.nodes?.mainInfoGroup.data.skuPriceInfo.SkuPostCouponPrice / 100 }}</span>
+              <span class="x-sale-price">{{ data.productInfo.nodes?.mainInfoGroup.data.sku.actual_amount / 100 }}</span>
             </label>
-            <span class="x-original-price">￥{{data.productInfo.nodes?.mainInfoGroup.data.skuPriceInfo.SkuOriginPrice / 100 }}</span>
+            <span class="x-original-price">￥{{data.productInfo.nodes?.mainInfoGroup.data.sku.origin_amount / 100 }}</span>
           </label>
           <p style="line-height: 12px;">
-            <span class="x-discount-price">核销后返￥{{ props.productInfo.commissionAmount }}</span>
+            <span class="x-discount-price">核销后返￥{{ props.productInfo.card_data.commissionAmount }}</span>
           </p>
         </div>
         <van-button
@@ -140,7 +140,7 @@ import { showLoadingToast, closeToast, showDialog } from 'vant'
 import { getMobilePlatform } from '@/utils/device'
 import { getLiveRoomUrlByPlatform, setClipboardContent } from '@/hooks'
 import { MOBILE_PLATFORM } from '@/constants'
-import { enterLiveRoomServer, getGoodsDetailServer } from '@/api'
+import { newEnterLiveRoomServer, getGoodsDetailServer } from '@/api'
 const props = defineProps({
   // 是否显示弹层
   show: {
@@ -170,9 +170,10 @@ let data = reactive({
       forbidClick: true,
       duration: 10000
     })
+    console.log('接收的参数：', props.productInfo, props.productInfo.component_id)
     try {
       let resData = await getGoodsDetailServer({
-        componentId: props.productInfo.componentId
+        componentId: props.productInfo.component_id
       })
       data.productInfo = JSON.parse(resData.result.ProductSerializationData)
       imageSwipeRef.value.swipeTo(0)
@@ -195,10 +196,11 @@ let data = reactive({
     })
 
     let url = getLiveRoomUrlByPlatform(props.productInfo.liveRoomUrl)
+
     try {
-      let id = props.productInfo.id
-      let resData = await enterLiveRoomServer({
-        id
+      console.log('进入直播间参数：', url)
+      let resData = await newEnterLiveRoomServer({
+        componentId: props.productInfo.component_id
       })
       closeToast()
       setTimeout(() => jumpToLiveRoom(url), 200);

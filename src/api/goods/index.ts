@@ -59,6 +59,17 @@ export function enterLiveRoomServer(data: API.EnterLiveRoomParams) {
 }
 
 /**
+ * @api 进入直播间接口，进入直播间后，将讲解的商品展示为当前的商品
+ */
+export function newEnterLiveRoomServer(data: API.NewEnterLiveRoomParams) {
+  return request({
+    url: '/api/ltk/ltkLiveGoods-api/enterLiveRoom2',
+    data,
+    method: 'GET'
+  })
+}
+
+/**
  * @api 申请返利奖励接口
  */
 export function receivePrizeServer(data: API.ApplyReceivePrizeParams) {

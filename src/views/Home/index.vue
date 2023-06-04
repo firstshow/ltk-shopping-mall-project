@@ -67,11 +67,6 @@
     <product-detail
       ref="productDetailRef"
       :show="showProductDetailPopup"
-      :componentId="data.currentProductId"
-      :productName="data.currentProductName"
-      :productSoldCount="data.currentProductSoldCount"
-      :poiAddress="data.currentPoiAddress"
-      :commissionAmount="data.currentCommissionAmount"
       :productInfo="data.currentProductInfo"
       @close="closeProductDetailPopup"
     />
@@ -118,11 +113,6 @@
     total: 0, // 总共商品数据条数
     orderNo: '', // 返利订单号
     currentProductInfo: {} as API.GoodsCartList, // 当前查看详情的直播间信息
-    currentProductId: '', // 当前展示详情的商品ID
-    currentProductName: '', // 当前展示详情的商品名称
-    currentProductSoldCount: '0', // 当前展示详情的商品销量
-    currentPoiAddress: '', // 当前展示详情的POI地址
-    currentCommissionAmount: '' // 当前展示详情的返利金额
   })
 
   /******************************** S 类目相关业务逻辑 ***********************************/

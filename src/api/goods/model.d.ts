@@ -42,6 +42,12 @@ declare namespace API {
     id: string // 商品Id
   }
   /**
+   * @type 进入直播间请求参数
+   */
+   type NewEnterLiveRoomParams = {
+    componentId: string // 商品Id
+  }
+  /**
    * @type 领取返利请求参数
    */
   type ApplyReceivePrizeParams = {
@@ -60,7 +66,7 @@ declare namespace API {
    * @type 搜索的商品信息
    */
     type SearchGoodsList = {
-      card_list: GoodsInfo[] // 列表数据
+      card_list: SearchGoodsInfo[] // 列表数据
       pages: number // 当前第几页
       size: number // 单页长度
       total: number // 列表总数
@@ -100,7 +106,16 @@ declare namespace API {
     list: GoodsCartList[] // 列表数据
     liveRoomId: number // 直播间ID
     liveRoomUrl: string // 直播间链接
+  }
 
+  /**
+   * @type 商品信息
+   */
+  type SearchGoodsInfo = {
+    card_data: any // 商品id
+    commissionRate: number // 返利比
+    liveRoomId: number // 直播间ID
+    liveRoomUrl: string // 直播间链接
   }
 
   /**

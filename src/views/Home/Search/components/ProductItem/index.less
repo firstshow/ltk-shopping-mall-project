@@ -1,0 +1,109 @@
+.x-product-item {
+  margin-bottom: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: @white;
+  box-shadow: 0 0 8px rgba(200,200,200,.1);
+  .x-shop-name {
+    color: @ltk-text-color;
+    font-size: 12px;
+    .x-name {
+      margin-left: 4px;
+    }
+  }
+  .x-product-info-box {
+    padding: 12px 0;
+    .x-product-img {
+      position: relative;
+      min-width: 100px;
+      .x-subscript {
+        z-index: 1;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border-radius: 8px 0 8px 0;
+        background-color: rgba(0,0,0,.6);
+        color: @white;
+        text-align: center;
+        font-size: 12px;
+      }
+      img {
+        width: 100px;
+        height: 100px;
+        border-radius: 8px;
+      }
+    }
+    .x-product-info {
+      min-width: 210px;
+      margin-left: 12px;
+      h3 {
+        min-height: 37px;
+        margin-bottom: 6px;
+        line-height: 18px;
+        color: @ltk-title-color;
+        font-size: 14px;
+        font-weight: bold;
+      }
+      .x-label {
+        display: inline-block;
+        margin-right: 6px;
+        padding: 0 4px;
+        background-color: @ltk-label-back-color;
+        border-radius: 2px;
+
+      }
+      .x-sale-count, .x-label {
+        color: @ltk-label-text-color;
+        font-size: 10px;
+      }
+    }
+    .x-price-box {
+      overflow: hidden;
+      margin-top: 12px;
+      border-radius: 4px;
+      color: @white;
+      .x-real-price,
+      .x-discount-price {
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        font-size: 10px;
+        .x-price {
+          font-size: 14px;
+          font-weight: bold;
+        }
+      }
+      .x-old-price {
+        margin-right: 4px;
+        color: @gray-3;
+        text-decoration:line-through;
+      }
+      .x-real-price {
+        width: 65%;
+        background-color: @ltk-theme-color;
+        border-radius: 4px 0 0 4px;
+      }
+      .x-discount-price {
+        position: relative;
+        width: 35%;
+        background-color: @ltk-light-text-color;
+        border-radius: 0 4px 4px 0;
+        color: @ltk-theme-color;
+        &::after {
+          content: '';
+          z-index: 1;
+          position: absolute;
+          top: 0;
+          left: -7.5px;
+          width: 0;
+          height: 0;
+          border-bottom: 30px solid @ltk-light-text-color;
+          border-left: 8px solid transparent;
+        }
+      }
+    }
+  }
+}
