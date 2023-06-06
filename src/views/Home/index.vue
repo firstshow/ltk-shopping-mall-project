@@ -8,8 +8,8 @@
     <div class="x-product-outside-box">
       <div class="x-inside-box">
         <!-- S 商品类目筛选 -->
-        <div class="x-category-selection flex items-center">
-          <ul class="x-category-list flex flex-nowrap">
+        <div class="x-category-selection flex justify-between items-center">
+          <ul class="x-category-list flex flex-nowrap items-center">
             <li
             :class="['x-category-item', selectedCategoryName === item ? 'x-item-selected' : '']"
             v-for="item in data.categoryList"
@@ -17,9 +17,9 @@
             @click="selectCategoryFn(item)"
           >{{ item }}</li>
           </ul>
-        </div>
-        <div class="x-search-box flex justify-center items-center" @click="jumpSearch">
-          <svg-icon name="IconSearch" size="28" />
+          <div class="x-search-box flex justify-center items-center" @click="jumpSearch">
+            <svg-icon name="IconSearch" size="28" />
+          </div>
         </div>
          <!-- E 商品类目筛选 -->
 
@@ -151,7 +151,7 @@
       showLoadingToast({
         message: '加载中...',
         forbidClick: true,
-        duration: 500
+        duration: 10000
       })
 
       let { keyword, pageNo, pageSize } = data.goodsListQueryParams
@@ -296,7 +296,7 @@
       showLoadingToast({
         message: '提交中...',
         forbidClick: true,
-        duration: 500
+        duration: 10000
       })
 
       let resData = await receivePrizeServer({

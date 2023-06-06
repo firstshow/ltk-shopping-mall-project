@@ -98,7 +98,7 @@
       showLoadingToast({
         message: '加载中...',
         forbidClick: true,
-        duration: 15000
+        duration: 10000
       })
       let { keyword, pageNo, pageSize } = data.goodsListQueryParams
       let resData = await searchGoodsListServer({
@@ -155,7 +155,7 @@
     showLoadingToast({
       message: '加载中...',
       forbidClick: true,
-      duration: 500
+      duration: 10000
     })
 
     let url = getLiveRoomUrlByPlatform(liveRoomUrl)

@@ -52,19 +52,19 @@
             :key="item.group_name"
             >
             <h3>{{ item.group_name }}</h3>
-            <ul>
-              <li
-                class="x-detail-item flex justify-between items-center"
-                v-for="(subItem) in  item.item_list"
-                :key="`${subItem.name}-${subItem.count}-${subItem.pric}`"
-              >
-                <span>{{ subItem.name }}</span>
-                <span>
-                  <span class="x-count">({{ subItem.count }} {{ subItem.unit_alias }})</span>
-                  <span>￥{{ subItem.price / 100 }}</span>
-                </span>
-              </li>
-            </ul>
+              <ul>
+                <li
+                  class="x-detail-item flex justify-between items-center"
+                  v-for="(subItem) in  item.item_list"
+                  :key="`${subItem.name}-${subItem.count}-${subItem.pric}`"
+                >
+                  <span>{{ subItem.name }}</span>
+                  <span>
+                    <span class="x-count">({{ subItem.count }} {{ subItem.unit_alias }})</span>
+                    <span>￥{{ subItem.price / 100 }}</span>
+                  </span>
+                </li>
+              </ul>
           </label>
           <label
             class="x-detail-group-box"
@@ -192,7 +192,7 @@ let data = reactive({
     showLoadingToast({
       message: '加载中...',
       forbidClick: true,
-      duration: 500
+      duration: 10000
     })
 
     let url = getLiveRoomUrlByPlatform(props.productInfo.liveRoomUrl)

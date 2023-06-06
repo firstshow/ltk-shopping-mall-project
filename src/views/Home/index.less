@@ -7,16 +7,16 @@
     border-top-right-radius: 24px;
     background-color: @gray-9;
     .x-category-selection {
-      overflow-x: auto;
       position: relative;
       width: 100%;
-      height: 80px;
       margin: 16px 0 0 0;
-      padding: 0 22px 0 22px;
       font-size: 14px;
       .x-category-list  {
+        overflow-x: auto;
         position: relative;
-        padding-right: 20px;
+        width: 100%;
+        height: 80px;
+        padding: 0 22px 0 22px;
       }
       .x-category-item {
         z-index: 1;
@@ -44,16 +44,7 @@
       }
     }
     .x-search-box {
-      z-index: 9;
-      position: absolute;
-      top: 20px;
-      right: 0;
-      width: 60px;
-      height: 70px;
-      border-top-right-radius: 24px;
-      background-color: @gray-9;
-      transform: translateY(-20px);
-      box-shadow: -1px 0 4px rgba(200,200,200,.3);
+      width: 10%;
     }
     .x-list {
       z-index: 111;

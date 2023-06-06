@@ -19,9 +19,9 @@
           <div class="x-price-box">
             <label>
               <span class="x-price-symbol">￥</span>
-              <span class="x-sale-price">{{ data.productInfo.nodes?.mainInfoGroup.data.skuPriceInfo.SkuPostCouponPrice / 100 }}</span>
+              <span class="x-sale-price">{{ data.productInfo.nodes?.mainInfoGroup.data.sku.actual_amount / 100 }}</span>
             </label>
-            <span class="x-original-price">￥{{data.productInfo.nodes?.mainInfoGroup.data.skuPriceInfo.SkuOriginPrice / 100 }}</span>
+            <span class="x-original-price">￥{{data.productInfo.nodes?.mainInfoGroup.data.sku.origin_amount / 100 }}</span>
           </div>
           <div class="x-sales-count">
             <span>已售 {{ props.productInfo.cardData.sold_count }} 份</span>
@@ -113,9 +113,9 @@
           <label>
             <label>
               <span class="x-price-symbol">￥</span>
-              <span class="x-sale-price">{{ data.productInfo.nodes?.mainInfoGroup.data.skuPriceInfo.SkuPostCouponPrice / 100 }}</span>
+              <span class="x-sale-price">{{ data.productInfo.nodes?.mainInfoGroup.data.sku.actual_amount / 100 }}</span>
             </label>
-            <span class="x-original-price">￥{{data.productInfo.nodes?.mainInfoGroup.data.skuPriceInfo.SkuOriginPrice / 100 }}</span>
+            <span class="x-original-price">￥{{data.productInfo.nodes?.mainInfoGroup.data.sku.origin_amount / 100 }}</span>
           </label>
           <p style="line-height: 12px;">
             <span class="x-discount-price">核销后返￥{{ props.productInfo.commissionAmount }}</span>
@@ -191,7 +191,7 @@ let data = reactive({
     showLoadingToast({
       message: '加载中...',
       forbidClick: true,
-      duration: 500
+      duration: 10000
     })
 
     let url = getLiveRoomUrlByPlatform(props.productInfo.liveRoomUrl)
