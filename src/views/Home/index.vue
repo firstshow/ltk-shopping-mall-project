@@ -288,7 +288,7 @@
    const applyReceivePrize = async () => {
     // 检查订单号是否正确，一定要符合抖音的订单号规则
     if (checkOrderNo(data.orderNo)) {
-      showToast({ message: '请复制8开头的19位抖音订单号' })
+      showToast({ message: '请正确复制19位抖音订单号' })
       return false
     }
 

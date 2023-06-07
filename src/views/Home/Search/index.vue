@@ -39,15 +39,11 @@
 <script setup lang="ts">
   import ProductItem from '@/views/Home/Search/components/ProductItem/index.vue'
   import ProductDetail from '@/views/Home/Search/components/ProductDetail/index.vue'
-  import { getLiveRoomUrlByPlatform, setClipboardContent } from '@/hooks'
-  import { MOBILE_PLATFORM } from '@/constants'
   import {
     searchGoodsListServer,
-    enterLiveRoomServer,
     getUserInfoServer
   } from '@/api'
-  import { showLoadingToast, closeToast, showDialog } from 'vant'
-  import { getMobilePlatform } from '@/utils/device'
+  import { showLoadingToast, closeToast } from 'vant'
   import { useUserStore } from '@/stores/modules/user'
 
   const userStore = useUserStore()
@@ -146,56 +142,6 @@
     data.loading = true
     searchGoodsList()
    }
-
-   /**
-    * @function 进入直播间，直播间商品切换成当前商品
-    * @param id 商品ID
-    */
-   const enterLiveRoom = async (liveRoomInfo: any, liveRoomUrl: string) => {
-    showLoadingToast({
-      message: '加载中...',
-      forbidClick: true,
-      duration: 10000
-    })
-
-    let url = getLiveRoomUrlByPlatform(liveRoomUrl)
-    console.log('|||{{{}}}}}}', url)
-    try {
-      let id = liveRoomInfo.id
-      let resData = await enterLiveRoomServer({
-        id
-      })
-      closeToast()
-      setTimeout(() => jumpToLiveRoom(url), 200);
-      console.log('获取直播间参数成功：', resData)
-    } catch (error) {
-      closeToast()
-      console.log('进入直播间失败：', error)
-    }
-   }
-
-   /**
-    * @function 跳转到直播间，这边安卓和IOS处理不一样
-    * @param url 直播间地址
-    */
-   const jumpToLiveRoom = async (url: string) => {
-    switch (getMobilePlatform()) {
-      case MOBILE_PLATFORM.android:
-        await setClipboardContent(url)
-        showDialog({
-          title: '复制成功',
-          message: '请打开抖音APP，出现直播间弹框提示后，进入直播间下单',
-        })
-        break
-      case MOBILE_PLATFORM.ios:
-      case MOBILE_PLATFORM.windows:
-        window.location.href = url
-        break
-      default:
-        console.error('不属于任何一个平台')
-    }
-   }
-
   /******************************** E 商品相关业务逻辑 ***********************************/
 
   /******************************** S 商品详情弹框业务逻辑 ***********************************/
