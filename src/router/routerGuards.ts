@@ -9,6 +9,17 @@ export function createRouterGuards(router: Router, whiteNameList: string[]) {
         accessToken: _to.query.token as string
       })
     }
+
+    // 如果有传toPage，那就直接跳转到toPage，并且把keyword传过去
+    if (_to.query.toPage) {
+      return next({
+        name: _to.query.toPage as string,
+        query: {
+          keyword: _to.query.keyword
+        }
+      })
+    }
+
     next()
   })
 

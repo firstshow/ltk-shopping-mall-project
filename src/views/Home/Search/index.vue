@@ -45,7 +45,10 @@
   } from '@/api'
   import { showLoadingToast, closeToast } from 'vant'
   import { useUserStore } from '@/stores/modules/user'
-
+  import { Base64 } from '@/utils/common'
+  import { useRoute } from 'vue-router'
+  const base64 = new Base64()
+  const router = useRoute()
   const userStore = useUserStore()
 
   defineOptions({
@@ -188,9 +191,19 @@ const getUserInfo = async () => {
   }
 }
 
+const initSearchList = () => {
+    if (router.query.keyword) {
+      // 这边发现一个问题，base64转码后的+，在router.query中会丢失，变成空格；所以这边将空格替换为+
+      let keyword = (router.query.keyword as string)?.replace(' ', '+')
+      data.goodsListQueryParams.keyword = base64.decode(keyword)
+      search()
+    }
+  }
+
   /******************************** S 生命周期钩子函数业务逻辑 ***********************************/
   onMounted(() => {
     getUserInfo()
+    initSearchList()
   })
   /******************************** E 生命周期钩子函数业务逻辑 ***********************************/
 </script>

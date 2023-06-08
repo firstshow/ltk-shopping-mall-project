@@ -219,7 +219,7 @@
   /******************************** E 获取用户信息业务逻辑 ***********************************/
 
   /******************************** S 商品详情弹框业务逻辑 ***********************************/
-  const productDetailRef = ref();
+  const productDetailRef = ref()
   const showProductDetailPopup = ref(false)
 
   /**
