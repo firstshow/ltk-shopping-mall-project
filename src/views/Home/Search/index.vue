@@ -191,11 +191,13 @@ const getUserInfo = async () => {
   }
 }
 
+/**
+ * @function 初始化搜索列表，从公众号跳转过来直接搜索对应的商品
+ */
 const initSearchList = () => {
     if (router.query.keyword) {
-      // 这边发现一个问题，base64转码后的+，在router.query中会丢失，变成空格；所以这边将空格替换为+
-      let keyword = (router.query.keyword as string)?.replace(' ', '+')
-      data.goodsListQueryParams.keyword = base64.decode(keyword)
+      console.log(router.query.keyword, base64.decode(router.query.keyword))
+      data.goodsListQueryParams.keyword = base64.decode(router.query.keyword)
       search()
     }
   }

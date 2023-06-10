@@ -31,6 +31,8 @@ export function Base64 () {
 
   // public method for decoding
   this.decode = function (input) {
+      // 因为公众号中+号会丢失，所以这边改成了|，这边需要将|改成+
+      input = input.replace('_', '+');
       let output = "";
       let chr1, chr2, chr3;
       let enc1, enc2, enc3, enc4;
@@ -58,7 +60,7 @@ export function Base64 () {
 
   // private method for UTF-8 encoding
   let _utf8_encode = function (string) {
-      string = string.replace(/\r\n/g, "\n");
+      string = string.replace(/\r\n/g, "\n")
       let utftext = "";
       for (let n = 0; n < string.length; n++) {
           let c = string.charCodeAt(n);
@@ -74,7 +76,8 @@ export function Base64 () {
           }
 
       }
-      return utftext;
+
+      return utftext
   }
 
   // private method for UTF-8 decoding
