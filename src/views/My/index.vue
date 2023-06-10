@@ -103,7 +103,7 @@
     showLoadingToast({
       message: '加载中...',
       forbidClick: true,
-      duration: 500
+      duration: 10000
     })
 
     try {

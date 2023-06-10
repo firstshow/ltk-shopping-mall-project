@@ -8,6 +8,14 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       title: '首页'
     }
+  },
+  {
+    path: '/home/search',
+    name: 'search',
+    component: () => import('@/views/Home/Search/index.vue'),
+    meta: {
+      title: '搜索页'
+    }
   }
 ]
 export default routes

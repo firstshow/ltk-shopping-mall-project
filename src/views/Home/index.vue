@@ -8,8 +8,8 @@
     <div class="x-product-outside-box">
       <div class="x-inside-box">
         <!-- S 商品类目筛选 -->
-        <div class="x-category-selection flex">
-          <ul class="flex flex-nowrap">
+        <div class="x-category-selection flex justify-between items-center">
+          <ul class="x-category-list flex flex-nowrap items-center">
             <li
             :class="['x-category-item', selectedCategoryName === item ? 'x-item-selected' : '']"
             v-for="item in data.categoryList"
@@ -17,6 +17,9 @@
             @click="selectCategoryFn(item)"
           >{{ item }}</li>
           </ul>
+          <div class="x-search-box flex justify-center items-center" @click="jumpSearch">
+            <svg-icon name="IconSearch" size="28" />
+          </div>
         </div>
          <!-- E 商品类目筛选 -->
 
@@ -25,15 +28,19 @@
           class="x-list"
           v-model="data.loading"
           :finished="data.finished"
-          finished-text="- 我是有底线的呦 -"
+          finished-text=""
           @load="onGoodsListLoad"
         >
           <product-item
             v-for="(item, index) in data.goodsList"
             :key="index"
             :data="item"
-            @onClick="enterLiveRoom(item, item.liveRoomUrl)"
+            @onClick="openProductDetailPopup(item)"
           />
+          <div class="x-list-finished flex justify-center items-center" v-if="data.finished">
+          没有您心仪的商品？
+          <span class="x-search" @click="jumpSearch">搜索一下</span>
+        </div>
         </van-list>
         <!-- E 商品列表 -->
       </div>
@@ -55,25 +62,32 @@
       @onClick="applyReceivePrize"
     />
     <!-- E 领取奖励的弹框 -->
-  </root-page>
 
+    <!-- S 商品详情的弹框 -->
+    <product-detail
+      ref="productDetailRef"
+      :show="showProductDetailPopup"
+      :productInfo="data.currentProductInfo"
+      @close="closeProductDetailPopup"
+    />
+    <!-- E 商品详情的弹框 -->
+  </root-page>
 </template>
 
 <script setup lang="ts">
   import ShoppingTips from '@/views/Home/components/ShoppingTips/index.vue'
   import ProductItem from '@/views/Home/components/ProductItem/index.vue'
+  import ProductDetail from '@/views/Home/components/ProductDetail/index.vue'
   import ReceivePopup from '@/views/Home/components/ReceivePopup/index.vue'
-  import { routeChange, checkOrderNo, getLiveRoomUrlByPlatform, setClipboardContent } from '@/hooks'
-  import { ROUTE_MAP, MOBILE_PLATFORM, ACTION_TYPE } from '@/constants'
+  import { routeChange, checkOrderNo } from '@/hooks'
+  import { ROUTE_MAP, ACTION_TYPE } from '@/constants'
   import {
     getCategoryListServer,
     getGoodsListServer,
-    enterLiveRoomServer,
     receivePrizeServer,
     getUserInfoServer
   } from '@/api'
-  import { showLoadingToast, closeToast, showToast, showDialog } from 'vant'
-  import { getMobilePlatform } from '@/utils/device'
+  import { showLoadingToast, closeToast, showToast } from 'vant'
   import { useUserStore } from '@/stores/modules/user'
   import { useRoute } from 'vue-router'
 
@@ -97,7 +111,8 @@
     loading: false, // 是在加载中
     finished: false, // 是否加载完成
     total: 0, // 总共商品数据条数
-    orderNo: '' // 返利订单号
+    orderNo: '', // 返利订单号
+    currentProductInfo: {} as API.GoodsCartList, // 当前查看详情的直播间信息
   })
 
   /******************************** S 类目相关业务逻辑 ***********************************/
@@ -136,7 +151,7 @@
       showLoadingToast({
         message: '加载中...',
         forbidClick: true,
-        duration: 500
+        duration: 10000
       })
 
       let { keyword, pageNo, pageSize } = data.goodsListQueryParams
@@ -176,78 +191,58 @@
    }
 
    /**
-    * @function 进入直播间，直播间商品切换成当前商品
-    * @param id 商品ID
-    */
-   const enterLiveRoom = async (liveRoomInfo: any, liveRoomUrl: string) => {
-    showLoadingToast({
-      message: '加载中...',
-      forbidClick: true,
-      duration: 500
-    })
-
-    let url = getLiveRoomUrlByPlatform(liveRoomUrl)
-    console.log('|||{{{}}}}}}', url)
-    try {
-      let id = liveRoomInfo.id
-      let resData = await enterLiveRoomServer({
-        id
-      })
-      closeToast()
-      setTimeout(() => jumpToLiveRoom(url), 200);
-      console.log('获取直播间参数成功：', resData)
-    } catch (error) {
-      closeToast()
-      console.log('进入直播间失败：', error)
-    }
-   }
-
-   /**
-    * @function 跳转到直播间，这边安卓和IOS处理不一样
-    * @param url 直播间地址
-    */
-   const jumpToLiveRoom = async (url: string) => {
-    switch (getMobilePlatform()) {
-      case MOBILE_PLATFORM.android:
-        await setClipboardContent(url)
-        showDialog({
-          title: '复制成功',
-          message: '请打开抖音APP，出现直播间弹框提示后，进入直播间下单',
-        })
-        break
-      case MOBILE_PLATFORM.ios:
-      case MOBILE_PLATFORM.windows:
-        window.location.href = url
-        break
-      default:
-        console.error('不属于任何一个平台')
-    }
-   }
-
+   * @function 跳转至我的页面
+   */
+   const jumpSearch = () => {
+    console.log('跳转进我的')
+    routeChange(ROUTE_MAP.search)
+  }
   /******************************** E 商品相关业务逻辑 ***********************************/
 
 
  /******************************** S 获取用户信息业务逻辑 ***********************************/
- /**
-  * @function 获取用户信息
-  */
-const getUserInfo = async () => {
-  try {
-    let resData = await getUserInfoServer()
-      userStore.setUserInfo({
-        nickname: resData.result.nickname,
-        avatar: resData.result.avatar
-      })
-    console.log('获取直播间参数成功：', resData)
-  } catch (error) {
-    console.log('进入直播间失败：', error)
+  /**
+    * @function 获取用户信息
+    */
+  const getUserInfo = async () => {
+    try {
+      let resData = await getUserInfoServer()
+        userStore.setUserInfo({
+          nickname: resData.result.nickname,
+          avatar: resData.result.avatar
+        })
+      console.log('获取直播间参数成功：', resData)
+    } catch (error) {
+      console.log('进入直播间失败：', error)
+    }
   }
-}
-
-
-
   /******************************** E 获取用户信息业务逻辑 ***********************************/
 
+  /******************************** S 商品详情弹框业务逻辑 ***********************************/
+  const productDetailRef = ref()
+  const showProductDetailPopup = ref(false)
+
+  /**
+   * @function 关闭商品详情弹框
+   */
+  const closeProductDetailPopup = () => {
+    showProductDetailPopup.value = false
+  }
+
+  /**
+   * @function 打开商品详情弹框
+   * @param liveRoomInfo 直播间信息
+   * @param liveRoomUrl
+   */
+  const openProductDetailPopup = async (productInfo: any) => {
+     console.log('||||', productInfo)
+     data.currentProductInfo = productInfo
+     nextTick(async () => {
+      await productDetailRef.value.getProductDetail()
+      showProductDetailPopup.value = true
+     })
+  }
+  /******************************** E 商品详情弹框业务逻辑 ***********************************/
 
   /******************************** S 底部操作栏业务逻辑 ***********************************/
   const showReceivePopup = ref(false)
@@ -293,7 +288,7 @@ const getUserInfo = async () => {
    const applyReceivePrize = async () => {
     // 检查订单号是否正确，一定要符合抖音的订单号规则
     if (checkOrderNo(data.orderNo)) {
-      showToast({ message: '请复制8开头的19位抖音订单号' })
+      showToast({ message: '请正确复制19位抖音订单号' })
       return false
     }
 
@@ -301,7 +296,7 @@ const getUserInfo = async () => {
       showLoadingToast({
         message: '提交中...',
         forbidClick: true,
-        duration: 500
+        duration: 10000
       })
 
       let resData = await receivePrizeServer({
