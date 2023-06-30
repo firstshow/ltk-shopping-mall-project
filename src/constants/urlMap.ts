@@ -6,8 +6,10 @@ function getImageUrl(name) {
 }
 
 export const LOGICAL_IMAGE = {
-  iconData: getImageUrl('data.svg'), // TODO 示例图片，请删除
-  receiveTipsImg: getImageUrl('receiveTipsImg.svg'), // TODO 示例图片，请删除
-  loadError: getImageUrl('loadError.svg'), // TODO 示例图片，请删除
-  loading: getImageUrl('loading.png') // TODO 示例图片，请删除
+  iconData: getImageUrl('data.svg'),
+  receiveTipsImg: getImageUrl('receiveTipsImg.svg'),
+  loadError: getImageUrl('loadError.svg'),
+  loading: getImageUrl('loading.png'),
+  receiveMoneyPopup: getImageUrl('receive_money_popup.jpg'),
+  iosEnterModel: getImageUrl('ios_enter_model.jpg')
 }

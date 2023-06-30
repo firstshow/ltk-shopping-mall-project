@@ -5,10 +5,18 @@
       <header class="x-product-header">
         <van-swipe ref="imageSwipeRef" :autoplay="3000" indicator-color="white">
           <van-swipe-item
+            v-if="data.productInfo.nodes"
             v-for="(item) in data.productInfo.nodes?.grouponDetail.data.images?.image_list"
             :key="item.url"
             >
             <img :src="item.url" alt="轮播图">
+          </van-swipe-item>
+          <van-swipe-item
+            v-else
+            v-for="(elseItem) in props.productInfo.cardData.image_info"
+            :key="elseItem.web_url"
+            >
+            <img :src="elseItem.web_url" alt="轮播图">
           </van-swipe-item>
         </van-swipe>
       </header>
@@ -19,9 +27,9 @@
           <div class="x-price-box">
             <label>
               <span class="x-price-symbol">￥</span>
-              <span class="x-sale-price">{{ data.productInfo.nodes?.mainInfoGroup.data.sku.actual_amount / 100 }}</span>
+              <span class="x-sale-price">{{ props.productInfo.cardData.actual_amount_num / 100 }}</span>
             </label>
-            <span class="x-original-price">￥{{data.productInfo.nodes?.mainInfoGroup.data.sku.origin_amount / 100 }}</span>
+            <span class="x-original-price">￥{{ props.productInfo.cardData.origin_amount_num / 100 }}</span>
           </div>
           <div class="x-sales-count">
             <span>已售 {{ props.productInfo.cardData.sold_count }} 份</span>
@@ -44,7 +52,7 @@
         <!-- E 门店信息 -->
 
         <!-- S 套餐详情信息 -->
-        <div class="x-info-box x-detail-box">
+        <div class="x-info-box x-detail-box" v-if="data.productInfo.nodes">
           <h3 class="x-title">团购详情</h3>
           <label
             class="x-detail-group-box"
@@ -85,7 +93,7 @@
         <!-- E 套餐详情信息 -->
 
         <!-- S 使用须知信息 -->
-        <div class="x-info-box x-detail-box">
+        <div class="x-info-box x-detail-box" v-if="data.productInfo.nodes">
           <h3 class="x-title">购买须知</h3>
           <label
             class="x-detail-group-box"
@@ -113,9 +121,9 @@
           <label>
             <label>
               <span class="x-price-symbol">￥</span>
-              <span class="x-sale-price">{{ data.productInfo.nodes?.mainInfoGroup.data.sku.actual_amount / 100 }}</span>
+              <span class="x-sale-price">{{ props.productInfo.cardData.actual_amount_num / 100 }}</span>
             </label>
-            <span class="x-original-price">￥{{data.productInfo.nodes?.mainInfoGroup.data.sku.origin_amount / 100 }}</span>
+            <span class="x-original-price">￥{{ props.productInfo.cardData.origin_amount_num / 100 }}</span>
           </label>
           <p style="line-height: 12px;">
             <span class="x-discount-price">核销后返￥{{ props.productInfo.commissionAmount }}</span>
@@ -165,16 +173,17 @@ let data = reactive({
    * @function 获取商品详情
    */
   const getProductDetail = async () => {
+    console.log('接收到的参数：', props.productInfo)
     showLoadingToast({
       message: '加载中...',
       forbidClick: true,
       duration: 10000
     })
     try {
-      let resData = await getGoodsDetailServer({
+      await getGoodsDetailServer({
         componentId: props.productInfo.componentId
       })
-      data.productInfo = JSON.parse(resData.result.ProductSerializationData)
+      // data.productInfo = resData.result.product_list[0]
       imageSwipeRef.value.swipeTo(0)
       console.log('返回的参数：', data.productInfo)
       closeToast()
