@@ -224,7 +224,7 @@ let data = reactive({
     */
    const jumpToLiveRoom = async (url: string) => {
     switch (getMobilePlatform()) {
-      case MOBILE_PLATFORM.android:
+      case MOBILE_PLATFORM.ios:
         await setClipboardContent(url)
         showDialog({
           title: '复制成功',

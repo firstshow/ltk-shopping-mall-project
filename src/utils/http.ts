@@ -64,7 +64,7 @@ const getHeaderParams = (obj) => {
     nonce
   }
 }
-const baseUrl = 'https://group-guest-api.netmi.com.cn'
+const baseUrl = import.meta.env.VITE_BASE_API
 const fsFetch = new FsFetch({})
 fsFetch.setInterceptor(false)
 fsFetch.setMockUrl('http://127.0.0.1:4523/mock/1080891/')
